@@ -306,7 +306,6 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   //EbyE v1 is calculated for different eta and charge
   //Now calculate the A correlator. 
 
-  cout << "NetaBins/2 " << NetaBins/2 << endl;
   for(int eta = 0; eta < NetaBins/2; eta++){
 
     double A_1_pm_YY = v1[eta][0] - v1[eta][1];
