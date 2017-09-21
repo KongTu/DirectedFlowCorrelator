@@ -165,10 +165,152 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
   Ntrk->Fill( nTracks );
 
+  const int NetaBins = etaBins_.size() - 1 ;
+
+  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus;
+  //HF towers loop to fill the towers' Q-vectors:
+  TComplex Q_n3_trk, Q_0_trk;
+  //charge independent, |eta|<1.0
+  TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
+
+
+
+  for(unsigned i = 0; i < towers->size(); ++i){
+
+          const CaloTower & hit= (*towers)[i];
+
+          double caloEta = hit.eta();
+          double caloPhi = hit.phi();
+          double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
+
+          hfPhi->Fill(caloPhi, w);
+          
+          if( reverseBeam_ ) caloEta = -hit.eta();          
+          if( caloEta < etaHighHF_ && caloEta > etaLowHF_ ){
+            
+              Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
+              Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
+
+          }
+          else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
+
+              Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
+              Q_0_1_HFminus += q_vector(0, 1, -w, caloPhi); 
+
+          }
+          else{continue;}
+  }
+
+  //track loop to fill charged particles Q-vectors
+  for(unsigned it = 0; it < tracks->size(); it++){
+
+    const reco::Track & trk = (*tracks)[it];
+
+    math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
+
+    double dzvtx = trk.dz(bestvtx);
+    double dxyvtx = trk.dxy(bestvtx);
+    double dzerror = sqrt(trk.dzError()*trk.dzError()+bestvzError*bestvzError);
+    double dxyerror = sqrt(trk.d0Error()*trk.d0Error()+bestvxError*bestvyError); 
+    double nhits = trk.numberOfValidHits();
+    double chi2n = trk.normalizedChi2();
+    double nlayers = trk.hitPattern().trackerLayersWithMeasurement();
+    chi2n = chi2n/nlayers;
+    double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
+    double phi = trk.phi();
+    double trkEta = trk.eta();
+
+    double weight = 1.0;
+    if( doEffCorrection_ ) { 
+      weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
+    }
+
+    if(!trk.quality(reco::TrackBase::highPurity)) continue;
+    if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
+    if(fabs(dzvtx/dzerror) > offlineDCA_) continue;
+    if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue;
+    if(chi2n > offlineChi2_ ) continue;
+    if(nhits < offlinenhits_ ) continue;
+    if( nPixelLayers <= 0 ) continue;
+    if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
+    if(fabs(trkEta) > etaTracker_ ) continue;
+
+    trkPhi->Fill(phi, weight);
+    trkPt->Fill(trk.pt(), weight);
+    trk_eta->Fill(trkEta, weight);
+
+    if( fabs(trkEta) < 1.0 ){
+   
+      Q_n3_trk += q_vector(+1, 1, weight, phi);//for scalar product in tracker
+      Q_0_trk += q_vector(0, 1, weight, phi);
+    }
+    
+    for(int eta = 0; eta < NetaBins; eta++){
+      if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
+
+        if( trk.charge() == +1 ){//positive charge
+
+          //3p:
+          Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
+          Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
+
+        }
+        if( trk.charge() == -1 ){//negative charge
+
+          Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
+          Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+        }
+      }
+    }//end of eta dimension
+
+  }
+
+  TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_4_SP;
+
+  N_1_SP = Q_n3_1_HFminus*Q_n3_trk;
+  D_1_SP = Q_0_1_HFminus*Q_0_trk;
+
+  N_2_SP = Q_n3_1_HFplus*Q_n3_trk;
+  D_2_SP = Q_0_1_HFplus*Q_0_trk;
+
+  N_3_SP = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
+  D_3_SP = Q_0_1_HFplus*Q_0_1_HFminus;
+
+  double t1 = N_1_SP.Re()/D_1_SP.Re();
+  double t2 = N_2_SP.Re()/D_2_SP.Re();
+  double t3 = N_3_SP.Re()/D_3_SP.Re();
+
+  double Res_A = sqrt(t1*t3/t2);
+  double Res_B = sqrt(t2*t3/t1);
+
+  double v1[NetaBins][2];//EbyE v1 in different eta slices and charge
+
+  for(int eta = 0; eta < NetaBins; eta++){
+    for(int charge = 0; charge < 2; charge++){
+
+      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
+
+      N_v1_A_SP = Q_n1_1[eta][charge]*Q_n3_1_HFminus;
+      D_v1_A_SP = Q_0_1[eta][charge]*Q_0_1_HFminus;
+
+      double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+
+      N_v1_B_SP = Q_n1_1[eta][charge]*Q_n3_1_HFplus;
+      D_v1_B_SP = Q_0_1[eta][charge]*Q_0_1_HFplus;
+
+      double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+
+      v1[eta][charge] = (V1_A/Res_A + V1_B/Res_B)/2.0;
+    }
+  }
+
+  //EbyE v1 is calculated for different eta and charge
+  //Now calculate the A correlator. 
+
+  cout  << "test " << v1[0][0] << endl;
+  
 
 }
-
-
 // ------------ method called once each job just before starting event loop  ------------
 void 
 DirectedFlowCorrelator::beginJob()
@@ -199,6 +341,13 @@ DirectedFlowCorrelator::beginJob()
 
 }
 
+TComplex 
+DirectedFlowCorrelator::q_vector(double n, double p, double w, double phi) 
+{
+  double term1 = pow(w,p);
+  TComplex e(1, n*phi, 1);
+  return term1*e;
+}
 // ------------ method called once each job just after ending the event loop  ------------
 void 
 DirectedFlowCorrelator::endJob() 
