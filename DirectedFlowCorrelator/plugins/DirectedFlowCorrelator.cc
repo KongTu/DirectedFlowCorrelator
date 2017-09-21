@@ -185,7 +185,6 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
           hfPhi->Fill(caloPhi, w);
           
-          if( reverseBeam_ ) caloEta = -hit.eta();          
           if( caloEta < etaHighHF_ && caloEta > etaLowHF_ ){
             
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
@@ -265,7 +264,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
   }
 
-  TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_4_SP;
+  TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_3_SP;
 
   N_1_SP = Q_n3_1_HFminus*Q_n3_trk;
   D_1_SP = Q_0_1_HFminus*Q_0_trk;
