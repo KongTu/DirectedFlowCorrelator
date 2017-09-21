@@ -361,10 +361,10 @@ DirectedFlowCorrelator::beginJob()
 
   for(int eta = 0; eta < NetaBins/2; eta++){
 
-    C_1_YY[eta] = fs->make<TH1D>("C_1_YY",";C_1_YY", 100,-1,1);
-    C_1_YmY[eta] = fs->make<TH1D>("C_1_YmY",";C_1_YmY", 100,-1,1);
-    C_2_YmY[eta] = fs->make<TH1D>("C_2_YmY",";C_2_YmY", 100,-1,1);
-    C_3_YmY[eta] = fs->make<TH1D>("C_3_YmY",";C_3_YmY", 100,-1,1);
+    C_1_YY[eta] = fs->make<TH1D>(Form("C_1_YY_%d",eta),";C_1_YY", 100,-1,1);
+    C_1_YmY[eta] = fs->make<TH1D>(Form("C_1_YmY_%d",eta),";C_1_YmY", 100,-1,1);
+    C_2_YmY[eta] = fs->make<TH1D>(Form("C_2_YmY_%d",eta),";C_2_YmY", 100,-1,1);
+    C_3_YmY[eta] = fs->make<TH1D>(Form("C_3_YmY_%d",eta),";C_3_YmY", 100,-1,1);
   }
 
 }
