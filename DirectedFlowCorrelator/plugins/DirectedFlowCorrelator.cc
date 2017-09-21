@@ -306,8 +306,28 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   //EbyE v1 is calculated for different eta and charge
   //Now calculate the A correlator. 
 
-  cout  << "test " << v1[0][0] << endl;
-  
+  cout << "NetaBins/2 " << NetaBins/2 << endl;
+  for(int eta = 0; NetaBins/2; eta++){
+
+    double A_1_pm_YY = v1[eta][0] - v1[eta][1];
+    double A_1_pm_YmY = v1[eta][0] - v1[NetaBins-eta-1][1];
+
+    double A_1_pp_YmY = v1[eta][0] - v1[NetaBins-eta-1][0];
+    double A_1_mm_YmY = v1[eta][1] - v1[NetaBins-eta-1][1];
+
+    double C_1 = A_1_pm_YY*A_1_pm_YY;
+    C_1_YY[eta]->Fill(C_1, Q_0_1[eta][0]);
+
+    double C_1_1 = A_1_pm_YmY*A_1_pm_YmY;
+    C_1_YmY[eta]->Fill(C_1_1, Q_0_1[eta][0]);
+
+    double C_2 = (v1[eta][0]+v1[NetaBins-eta-1][1])*(v1[eta][0]+v1[NetaBins-eta-1][1]);
+    C_2_YmY[eta]->Fill(C_2, Q_0_1[eta][0]);
+
+    double C_3 = A_1_pp_YmY*A_1_mm_YmY;
+    C_3_YmY[eta]->Fill(C_3, Q_0_1[eta][0]);
+
+  }  
 
 }
 // ------------ method called once each job just before starting event loop  ------------
@@ -317,6 +337,8 @@ DirectedFlowCorrelator::beginJob()
   edm::Service<TFileService> fs;
     
   TH1D::SetDefaultSumw2();
+
+  const int NetaBins = etaBins_.size() - 1 ;
 
   double ptBinsArray[100];
   const int Nptbins = ptBins_.size() - 1;
@@ -337,6 +359,14 @@ DirectedFlowCorrelator::beginJob()
   hfPhi = fs->make<TH1D>("hfPhi", ";#phi", 700, -3.5, 3.5);
   trkPt = fs->make<TH1D>("trkPt", ";p_{T}(GeV)", Nptbins,ptBinsArray);
   trk_eta = fs->make<TH1D>("trk_eta", ";#eta", 50,-2.5,2.5);
+
+  for(int eta = 0; eta < NetaBins/2; eta++){
+
+    C_1_YY[eta] = fs->make<TH1D>("C_1_YY",";C_1_YY", 100,-1,1);
+    C_1_YmY[eta] = fs->make<TH1D>("C_1_YmY",";C_1_YmY", 100,-1,1);
+    C_2_YmY[eta] = fs->make<TH1D>("C_2_YmY",";C_2_YmY", 100,-1,1);
+    C_3_YmY[eta] = fs->make<TH1D>("C_3_YmY",";C_3_YmY", 100,-1,1);
+  }
 
 }
 
