@@ -185,6 +185,12 @@ class DirectedFlowCorrelator : public edm::EDAnalyzer {
       TH1D* trk_eta;
       TH1D* cbinHist;
 
+      TH1D* c2_cb;
+      TH1D* c2_ab;
+      TH1D* c2_ac;
+
+      TH1D* c2_v1[20][2][2];
+
       TH1D* C_1_YY[20];
       TH1D* C_1_YmY[20];
 

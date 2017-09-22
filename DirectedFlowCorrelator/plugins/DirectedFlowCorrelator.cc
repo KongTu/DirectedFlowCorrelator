@@ -264,6 +264,54 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
   }
 
+/*
+event average v1
+*/
+
+//resolution factor
+  TComplex N_2_trk, D_2_trk;
+
+  N_2_trk = Q_n3_trk*Q_n3_1_HFplus;
+  D_2_trk = Q_0_trk*Q_0_1_HFplus;
+
+  c2_cb->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+
+  N_2_trk = Q_n3_trk*Q_n3_1_HFminus;
+  D_2_trk = Q_0_trk*Q_0_1_HFminus;
+
+  c2_ac->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+
+  N_2_trk = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
+  D_2_trk = Q_0_1_HFplus*Q_0_1_HFminus;
+
+  c2_ab->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+
+//numerator
+
+  for(int eta = 0; eta < NetaBins; eta++){
+    for(int charge = 0; charge < 2; charge++){
+
+      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
+
+      N_v1_A_SP = Q_n1_1[eta][charge]*Q_n3_1_HFminus;
+      D_v1_A_SP = Q_0_1[eta][charge]*Q_0_1_HFminus;
+
+      double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+
+      N_v1_B_SP = Q_n1_1[eta][charge]*Q_n3_1_HFplus;
+      D_v1_B_SP = Q_0_1[eta][charge]*Q_0_1_HFplus;
+
+      double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+
+      c2_v1[eta][charge][0]->Fill(V1_A, D_v1_A_SP.Re());
+      c2_v1[eta][charge][1]->Fill(V1_B, D_v1_B_SP.Re());
+
+    }
+  }
+//
+/*
+EbyE analysis, in progress.
+*/
   TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_3_SP;
 
   N_1_SP = Q_n3_1_HFminus*Q_n3_trk;
@@ -366,6 +414,20 @@ DirectedFlowCorrelator::beginJob()
     C_2_YmY[eta] = fs->make<TH1D>(Form("C_2_YmY_%d",eta),";C_2_YmY", 100,-1,1);
     C_3_YmY[eta] = fs->make<TH1D>(Form("C_3_YmY_%d",eta),";C_3_YmY", 100,-1,1);
   }
+
+  for(int eta = 0; eta < NetaBins; eta++){
+    for(int charge = 0; charge < 2; charge++){
+      for(int dir = 0; dir < 2; dir++){
+
+        c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
+      }
+    }
+  }
+
+
+  c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
+  c2_ac = fs->make<TH1D>("c2_ac",";c2_ac", 1,-1,1);
+  c2_cb = fs->make<TH1D>("c2_cb",";c2_cb", 1,-1,1);
 
 }
 
