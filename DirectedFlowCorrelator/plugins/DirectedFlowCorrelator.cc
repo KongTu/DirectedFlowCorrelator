@@ -193,8 +193,8 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
-              Q_n3_1_HFminus += q_vector(-1, 1, w, caloPhi);
-              Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); 
+              Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
+              Q_0_1_HFminus += q_vector(0, 1, -w, caloPhi); 
 
           }
           else{continue;}
