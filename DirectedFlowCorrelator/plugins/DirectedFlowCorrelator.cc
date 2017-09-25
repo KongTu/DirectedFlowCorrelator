@@ -91,9 +91,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
   const reco::Vertex & vtx = (*vertices)[0];
 
-  std::vector<reco::Vertex> vsorted = *vertices;
-  std::sort(vsorted.begin(), vsorted.end(), vtxSort);
-  cout << "size " << vsorted.size() << endl;
+  cout << "size " << vertices->size() << endl;
 
   bestvz = vtx.z(); 
   bestvx = vtx.x(); 
