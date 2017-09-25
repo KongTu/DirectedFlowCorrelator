@@ -174,6 +174,14 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
 
 
+  double HFplus_cos = 0.0;
+  double HFminus_cos = 0.0;
+
+  double HFplus_sin = 0.0;
+  double HFminus_sin = 0.0;
+
+  double plus_count = 0.0;
+  double minus_count = 0.0;
 
   for(unsigned i = 0; i < towers->size(); ++i){
 
@@ -190,15 +198,33 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
+              HFplus_cos += w*cos(caloPhi);
+              HFplus_sin += w*sin(caloPhi);
+              plus_count += w;
+
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, -w, caloPhi); 
 
+              HFminus_cos += -w*cos(caloPhi);
+              HFminus_sin += -w*sin(caloPhi);
+              minus_count += -w;
           }
           else{continue;}
   }
+
+  double HFplus_real = HFplus_cos/plus_count;
+  double HFplus_imag = HFplus_sin/plus_count;
+  double Psi_RP_HF_plus = TMath::ATan(HFplus_imag/HFplus_real);
+
+  double HFminus_real = HFminus_cos/minus_count;
+  double HFminus_imag = HFminus_sin/minus_count;
+  double Psi_RP_HF_minus = TMath::ATan(HFminus_imag/HFminus_real);
+
+  HFeventPlane->Fill(Psi_RP_HF_plus, Psi_RP_HF_minus);
+
 
   //track loop to fill charged particles Q-vectors
   for(unsigned it = 0; it < tracks->size(); it++){
@@ -441,6 +467,7 @@ DirectedFlowCorrelator::beginJob()
   c2_b = fs->make<TH1D>("c2_b",";c2_b", 100,-1,1);
   c2_c = fs->make<TH1D>("c2_c",";c2_c", 100,-1,1);
 
+  HFeventPlane = fs->make<TH2D>("HFeventPlane",";plus;minus", 1000,-3.14,3.14,1000,-3.14,3.14);
 }
 
 TComplex 
