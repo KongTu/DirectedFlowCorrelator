@@ -312,9 +312,9 @@ event average v1
 
   c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re() );
 
-  c2_a->Fill(Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re());
-  c2_b->Fill(Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re());
-  c2_c->Fill(Q_n3_trk.Re()/Q_0_trk.Re(), Q_0_trk.Re());
+  c2_a->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re() );
+  c2_b->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re() );
+  c2_c->Fill( Q_n3_trk.Re()/Q_0_trk.Re() );
 
 //numerator
 
@@ -333,8 +333,8 @@ event average v1
 
       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
-      c2_v1[eta][charge][0]->Fill(V1_A, D_v1_A_SP.Re());
-      c2_v1[eta][charge][1]->Fill(V1_B, D_v1_B_SP.Re());
+      c2_v1[eta][charge][0]->Fill( V1_A );
+      c2_v1[eta][charge][1]->Fill( V1_B );
 
     }
   }
