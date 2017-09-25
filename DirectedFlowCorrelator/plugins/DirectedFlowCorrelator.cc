@@ -286,6 +286,10 @@ event average v1
 
   c2_ab->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
 
+  c2_a->Fill(Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re());
+  c2_b->Fill(Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re());
+  c2_c->Fill(Q_n3_trk.Re()/Q_0_trk.Re(), Q_0_trk.Re());
+
 //numerator
 
   for(int eta = 0; eta < NetaBins; eta++){
@@ -429,9 +433,13 @@ DirectedFlowCorrelator::beginJob()
   }
 
 
-  c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
-  c2_ac = fs->make<TH1D>("c2_ac",";c2_ac", 1,-1,1);
-  c2_cb = fs->make<TH1D>("c2_cb",";c2_cb", 1,-1,1);
+  c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 100,-1,1);
+  c2_ac = fs->make<TH1D>("c2_ac",";c2_ac", 100,-1,1);
+  c2_cb = fs->make<TH1D>("c2_cb",";c2_cb", 100,-1,1);
+
+  c2_a = fs->make<TH1D>("c2_a",";c2_a", 100,-1,1);
+  c2_b = fs->make<TH1D>("c2_b",";c2_b", 100,-1,1);
+  c2_c = fs->make<TH1D>("c2_c",";c2_c", 100,-1,1);
 
 }
 
