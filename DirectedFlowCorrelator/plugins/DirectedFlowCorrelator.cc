@@ -90,9 +90,6 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   double bestvz=-999.9, bestvx=-999.9, bestvy=-999.9;
   double bestvzError=-999.9, bestvxError=-999.9, bestvyError=-999.9;
   const reco::Vertex & vtx = (*vertices)[0];
-
-  cout << "size " << vertices->size() << endl;
-
   bestvz = vtx.z(); 
   bestvx = vtx.x(); 
   bestvy = vtx.y();
@@ -277,17 +274,17 @@ event average v1
   N_2_trk = Q_n3_trk*Q_n3_1_HFplus;
   D_2_trk = Q_0_trk*Q_0_1_HFplus;
 
-  c2_cb->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  c2_cb->Fill(N_2_trk.Re()/D_2_trk.Re(), fabs(D_2_trk.Re()));
 
   N_2_trk = Q_n3_trk*Q_n3_1_HFminus;
   D_2_trk = Q_0_trk*Q_0_1_HFminus;
 
-  c2_ac->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  c2_ac->Fill(N_2_trk.Re()/D_2_trk.Re(), fabs(D_2_trk.Re()) );
 
   N_2_trk = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
   D_2_trk = Q_0_1_HFplus*Q_0_1_HFminus;
 
-  c2_ab->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  c2_ab->Fill(N_2_trk.Re()/D_2_trk.Re(), fabs(D_2_trk.Re()) );
 
   c2_a->Fill(Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re());
   c2_b->Fill(Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re());
