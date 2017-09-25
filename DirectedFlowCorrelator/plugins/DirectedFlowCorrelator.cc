@@ -238,7 +238,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
-    if( fabs(trkEta) < 1.0 ){
+    if( fabs(trkEta) < 2.4 ){
    
       Q_n3_trk += q_vector(+1, 1, weight, phi);//for scalar product in tracker
       Q_0_trk += q_vector(0, 1, weight, phi);
@@ -309,6 +309,10 @@ event average v1
     }
   }
 //
+
+
+
+
 /*
 EbyE analysis, in progress.
 */
