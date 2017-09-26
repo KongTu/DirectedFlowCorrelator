@@ -330,9 +330,9 @@ event average v1
   c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
 
-  c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Im(), Q_0_1_HFminus.Re() );
-  c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Im(), Q_0_1_HFplus.Re() );
-  c2_c_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Im(), Q_0_trk_plus.Re() );
+  c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
+  c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
+  c2_c_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
 
 
 //numerator
