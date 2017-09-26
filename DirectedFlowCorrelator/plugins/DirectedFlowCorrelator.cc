@@ -329,7 +329,7 @@ event average v1
 
   c2_a->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re() );
   c2_b->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re() );
-  c2_c->Fill( Q_n3_trk.Re()/Q_0_trk.Re() );
+  c2_c->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re() );
 
 //numerator
 
