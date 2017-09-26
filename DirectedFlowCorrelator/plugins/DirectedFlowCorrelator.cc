@@ -260,16 +260,18 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
 
+    weight = weight*(1/trk.pt());
+
     trkPhi->Fill(phi, weight);
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
-    if( trkEta < -2.0 && trkEta > -2.4 ){
+    if( trkEta < -1.8 && trkEta > -2.4 ){
    
       Q_n3_trk_minus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
       Q_0_trk_minus += q_vector(0, 1, weight, phi);
     }
-    if( trkEta < 2.4 && trkEta > 2.0 ){
+    if( trkEta < 2.4 && trkEta > 1.8 ){
    
       Q_n3_trk_plus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
       Q_0_trk_plus += q_vector(0, 1, weight, phi);
@@ -292,7 +294,6 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
         }
       }
     }//end of eta dimension
-
   }
 
 /*
