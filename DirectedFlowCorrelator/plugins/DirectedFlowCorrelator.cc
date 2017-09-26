@@ -326,9 +326,14 @@ event average v1
 
   c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
-  c2_a->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
-  c2_b->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
-  c2_c->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
+  c2_a_real->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
+  c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
+  c2_c_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
+
+  c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Im(), Q_0_1_HFminus.Re() );
+  c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Im(), Q_0_1_HFplus.Re() );
+  c2_c_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Im(), Q_0_trk_plus.Re() );
+
 
 //numerator
 
@@ -474,15 +479,20 @@ DirectedFlowCorrelator::beginJob()
 
 
   c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
+  
   c2_ac_plus = fs->make<TH1D>("c2_ac_plus",";c2_ac_plus", 1,-1,1);
   c2_cb_plus = fs->make<TH1D>("c2_cb_plus",";c2_cb_plus", 1,-1,1);
 
   c2_ac_minus = fs->make<TH1D>("c2_ac_minus",";c2_ac_minus", 1,-1,1);
   c2_cb_minus = fs->make<TH1D>("c2_cb_minus",";c2_cb_minus", 1,-1,1);
 
-  c2_a = fs->make<TH1D>("c2_a",";c2_a", 1,-1,1);
-  c2_b = fs->make<TH1D>("c2_b",";c2_b", 1,-1,1);
-  c2_c = fs->make<TH1D>("c2_c",";c2_c", 1,-1,1);
+  c2_a_real = fs->make<TH1D>("c2_a_real",";c2_a_real", 1,-1,1);
+  c2_b_real = fs->make<TH1D>("c2_b_real",";c2_b_real", 1,-1,1);
+  c2_c_real = fs->make<TH1D>("c2_c_real",";c2_c_real", 1,-1,1);
+
+  c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
+  c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
+  c2_c_imag = fs->make<TH1D>("c2_c_imag",";c2_c_imag", 1,-1,1);
 
   HFeventPlane = fs->make<TH2D>("HFeventPlane",";plus;minus", 100,-3.14,3.14,100,-3.14,3.14);
 }
