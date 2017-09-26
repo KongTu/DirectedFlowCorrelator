@@ -363,11 +363,11 @@ EbyE analysis, in progress.
 */
   TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_3_SP;
 
-  N_1_SP = Q_n3_1_HFminus*Q_n3_trk;
-  D_1_SP = Q_0_1_HFminus*Q_0_trk;
+  N_1_SP = Q_n3_1_HFminus*Q_n3_trk_plus;
+  D_1_SP = Q_0_1_HFminus*Q_0_trk_plus;
 
-  N_2_SP = Q_n3_1_HFplus*Q_n3_trk;
-  D_2_SP = Q_0_1_HFplus*Q_0_trk;
+  N_2_SP = Q_n3_1_HFplus*Q_n3_trk_plus;
+  D_2_SP = Q_0_1_HFplus*Q_0_trk_plus;
 
   N_3_SP = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
   D_3_SP = Q_0_1_HFplus*Q_0_1_HFminus;
