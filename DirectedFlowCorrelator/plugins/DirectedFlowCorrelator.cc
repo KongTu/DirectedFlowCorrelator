@@ -169,7 +169,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
   TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus;
   //HF towers loop to fill the towers' Q-vectors:
-  TComplex Q_n3_trk, Q_0_trk;
+  TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
   //charge independent, |eta|<1.0
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
 
@@ -206,11 +206,11 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
-              Q_0_1_HFminus += q_vector(0, 1, -w, caloPhi); 
+              Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
 
               HFminus_cos += -w*cos(caloPhi);
               HFminus_sin += -w*sin(caloPhi);
-              minus_count += -w;
+              minus_count += w;
           }
           else{continue;}
   }
@@ -264,10 +264,15 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
-    if( fabs(trkEta) < 1.0 ){
+    if( trkEta < -1.4 && trkEta > -2.4 ){
    
-      Q_n3_trk += q_vector(+1, 1, weight, phi);//for scalar product in tracker
-      Q_0_trk += q_vector(0, 1, weight, phi);
+      Q_n3_trk_minus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
+      Q_0_trk_minus += q_vector(0, 1, weight, phi);
+    }
+    if( trkEta < 2.4 && trkEta > 1.4 ){
+   
+      Q_n3_trk_plus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
+      Q_0_trk_plus += q_vector(0, 1, weight, phi);
     }
     
     for(int eta = 0; eta < NetaBins; eta++){
@@ -297,15 +302,25 @@ event average v1
 //resolution factor
   TComplex N_2_trk, D_2_trk;
 
-  N_2_trk = Q_n3_trk*Q_n3_1_HFplus;
-  D_2_trk = Q_0_trk*Q_0_1_HFplus;
+  N_2_trk = Q_n3_trk_plus*Q_n3_1_HFplus;
+  D_2_trk = Q_0_trk_plus*Q_0_1_HFplus;
 
-  c2_cb->Fill( N_2_trk.Re()/D_2_trk.Re());
+  c2_cb_plus->Fill( N_2_trk.Re()/D_2_trk.Re());
 
-  N_2_trk = Q_n3_trk*Q_n3_1_HFminus;
-  D_2_trk = Q_0_trk*Q_0_1_HFminus;
+  N_2_trk = Q_n3_trk_plus*Q_n3_1_HFminus;
+  D_2_trk = Q_0_trk_plus*Q_0_1_HFminus;
 
-  c2_ac->Fill( N_2_trk.Re()/D_2_trk.Re() );
+  c2_ac_plus->Fill( N_2_trk.Re()/D_2_trk.Re() );
+
+  N_2_trk = Q_n3_trk_minus*Q_n3_1_HFplus;
+  D_2_trk = Q_0_trk_minus*Q_0_1_HFplus;
+
+  c2_cb_minus->Fill( N_2_trk.Re()/D_2_trk.Re());
+
+  N_2_trk = Q_n3_trk_minus*Q_n3_1_HFminus;
+  D_2_trk = Q_0_trk_minus*Q_0_1_HFminus;
+
+  c2_ac_minus->Fill( N_2_trk.Re()/D_2_trk.Re() );
 
   N_2_trk = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
   D_2_trk = Q_0_1_HFplus*Q_0_1_HFminus;
@@ -459,15 +474,18 @@ DirectedFlowCorrelator::beginJob()
   }
 
 
-  c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 100,-1,1);
-  c2_ac = fs->make<TH1D>("c2_ac",";c2_ac", 100,-1,1);
-  c2_cb = fs->make<TH1D>("c2_cb",";c2_cb", 100,-1,1);
+  c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
+  c2_ac_plus = fs->make<TH1D>("c2_ac_plus",";c2_ac_plus", 1,-1,1);
+  c2_cb_plus = fs->make<TH1D>("c2_cb_plus",";c2_cb_plus", 1,-1,1);
 
-  c2_a = fs->make<TH1D>("c2_a",";c2_a", 100,-1,1);
-  c2_b = fs->make<TH1D>("c2_b",";c2_b", 100,-1,1);
-  c2_c = fs->make<TH1D>("c2_c",";c2_c", 100,-1,1);
+  c2_ac_minus = fs->make<TH1D>("c2_ac_minus",";c2_ac_minus", 1,-1,1);
+  c2_cb_minus = fs->make<TH1D>("c2_cb_minus",";c2_cb_minus", 1,-1,1);
 
-  HFeventPlane = fs->make<TH2D>("HFeventPlane",";plus;minus", 1000,-3.14,3.14,1000,-3.14,3.14);
+  c2_a = fs->make<TH1D>("c2_a",";c2_a", 1,-1,1);
+  c2_b = fs->make<TH1D>("c2_b",";c2_b", 1,-1,1);
+  c2_c = fs->make<TH1D>("c2_c",";c2_c", 1,-1,1);
+
+  HFeventPlane = fs->make<TH2D>("HFeventPlane",";plus;minus", 100,-3.14,3.14,100,-3.14,3.14);
 }
 
 TComplex 
