@@ -241,7 +241,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     double chi2n = trk.normalizedChi2();
     double nlayers = trk.hitPattern().trackerLayersWithMeasurement();
     chi2n = chi2n/nlayers;
-    double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
+    //double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
     double phi = trk.phi();
     double trkEta = trk.eta();
 
@@ -256,7 +256,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue;
     if(chi2n > offlineChi2_ ) continue;
     if(nhits < offlinenhits_ ) continue;
-    if( nPixelLayers <= 0 ) continue;
+    //if( nPixelLayers <= 0 ) continue;
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
 
