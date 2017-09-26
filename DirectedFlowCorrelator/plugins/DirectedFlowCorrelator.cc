@@ -260,8 +260,6 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
 
-    weight = weight*(1/trk.pt());
-
     trkPhi->Fill(phi, weight);
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
@@ -306,31 +304,31 @@ event average v1
   N_2_trk = Q_n3_trk_plus*Q_n3_1_HFplus;
   D_2_trk = Q_0_trk_plus*Q_0_1_HFplus;
 
-  c2_cb_plus->Fill( N_2_trk.Re()/D_2_trk.Re());
+  c2_cb_plus->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
 
   N_2_trk = Q_n3_trk_plus*Q_n3_1_HFminus;
   D_2_trk = Q_0_trk_plus*Q_0_1_HFminus;
 
-  c2_ac_plus->Fill( N_2_trk.Re()/D_2_trk.Re() );
+  c2_ac_plus->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
   N_2_trk = Q_n3_trk_minus*Q_n3_1_HFplus;
   D_2_trk = Q_0_trk_minus*Q_0_1_HFplus;
 
-  c2_cb_minus->Fill( N_2_trk.Re()/D_2_trk.Re());
+  c2_cb_minus->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
 
   N_2_trk = Q_n3_trk_minus*Q_n3_1_HFminus;
   D_2_trk = Q_0_trk_minus*Q_0_1_HFminus;
 
-  c2_ac_minus->Fill( N_2_trk.Re()/D_2_trk.Re() );
+  c2_ac_minus->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
   N_2_trk = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
   D_2_trk = Q_0_1_HFplus*Q_0_1_HFminus;
 
-  c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re() );
+  c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
-  c2_a->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re() );
-  c2_b->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re() );
-  c2_c->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re() );
+  c2_a->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
+  c2_b->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
+  c2_c->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
 
 //numerator
 
