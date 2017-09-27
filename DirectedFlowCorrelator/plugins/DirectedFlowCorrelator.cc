@@ -264,15 +264,20 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
+//important! flip everything with a negative in eta < 0
+    double weight_count = weight;
+    if( trkEta < 0 ) {weight = -weight;}
+//*****************************************************
+    
     if( trkEta < -2.0 && trkEta > -2.4 ){
    
-      Q_n3_trk_minus += q_vector(+1, 1, -weight, phi);//for scalar product in tracker
-      Q_0_trk_minus += q_vector(0, 1, weight, phi);
+      Q_n3_trk_minus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
+      Q_0_trk_minus += q_vector(0, 1, weight_count, phi);
     }
     if( trkEta < 2.4 && trkEta > 2.0 ){
    
       Q_n3_trk_plus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
-      Q_0_trk_plus += q_vector(0, 1, weight, phi);
+      Q_0_trk_plus += q_vector(0, 1, weight_count, phi);
     }
     
     for(int eta = 0; eta < NetaBins; eta++){
@@ -282,13 +287,13 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
           //3p:
           Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
-          Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
+          Q_0_1[eta][0] += q_vector(0, 1, weight_count, phi);
 
         }
         if( trk.charge() == -1 ){//negative charge
 
           Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
-          Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+          Q_0_1[eta][1] += q_vector(0, 1, weight_count, phi);
         }
       }
     }//end of eta dimension
@@ -338,7 +343,6 @@ event average v1
 
 
 //numerator
-
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
 
@@ -354,8 +358,8 @@ event average v1
 
       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
-      c2_v1[eta][charge][0]->Fill( V1_A );
-      c2_v1[eta][charge][1]->Fill( V1_B );
+      c2_v1[eta][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
+      c2_v1[eta][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
 
     }
   }
