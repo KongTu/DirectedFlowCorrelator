@@ -268,7 +268,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     double weight_count = weight;
     if( trkEta < 0 ) {weight = -weight;}
 //*****************************************************
-    
+
     if( trkEta < -2.0 && trkEta > -2.4 ){
    
       Q_n3_trk_minus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
@@ -333,12 +333,10 @@ event average v1
 
   c2_a_real->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
-  c2_b_real_conjugate->Fill( TComplex::Conjugate(Q_n3_1_HFplus).Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
 
   c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
-  c2_b_imag_conjugate->Fill( TComplex::Conjugate(Q_n3_1_HFplus).Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
 
 
@@ -494,12 +492,10 @@ DirectedFlowCorrelator::beginJob()
 
   c2_a_real = fs->make<TH1D>("c2_a_real",";c2_a_real", 1,-1,1);
   c2_b_real = fs->make<TH1D>("c2_b_real",";c2_b_real", 1,-1,1);
-  c2_b_real_conjugate = fs->make<TH1D>("c2_b_real_conjugate",";c2_b_real_conjugate", 1,-1,1);
   c2_c_real = fs->make<TH1D>("c2_c_real",";c2_c_real", 1,-1,1);
 
   c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
-  c2_b_imag_conjugate = fs->make<TH1D>("c2_b_imag_conjugate",";c2_b_imag_conjugate", 1,-1,1);
   c2_c_imag = fs->make<TH1D>("c2_c_imag",";c2_c_imag", 1,-1,1);
 
   HFeventPlane = fs->make<TH2D>("HFeventPlane",";plus;minus", 100,-3.14,3.14,100,-3.14,3.14);
