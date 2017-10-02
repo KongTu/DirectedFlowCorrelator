@@ -326,7 +326,8 @@ event average v1
       c2_v1[eta][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_v1[eta][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
 
-      c2_trk_accept[eta][charge]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
+      c2_trk_accept[eta][charge][0]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
+      c2_trk_accept[eta][charge][1]->Fill(Q_n1_1[eta][charge].Im()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
 
     }
   }
@@ -440,11 +441,11 @@ DirectedFlowCorrelator::beginJob()
 
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
-
-      c2_trk_accept[eta][charge] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d",eta,charge), ";c1", 1,-1,1);
       for(int dir = 0; dir < 2; dir++){
 
         c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
+        c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 1,-1,1);
+
       }
     }
   }
