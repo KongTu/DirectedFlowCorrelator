@@ -173,6 +173,10 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   //charge independent, |eta|<1.0
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
 
+  double px_track[NetaBins][2];
+  double pt_track[NetaBins][2];
+  double track_count[NetaBins][2];
+
   for(unsigned i = 0; i < towers->size(); ++i){
 
           const CaloTower & hit= (*towers)[i];
@@ -256,15 +260,32 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
           Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
           Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
+          px_track[eta][0] += weight*trk.px();
+          pt_track[eta][0] += weight*trk.pt();
+          track_count[eta][0] += weight;
         }
         if( trk.charge() == -1 ){//negative charge
 
           Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
           Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+
+          px_track[eta][1] += weight*trk.px();
+          pt_track[eta][1] += weight*trk.pt();
+          track_count[eta][1] += weight;
+
         }
       }
     }//end of eta dimension
   }
+
+  for(int eta = 0; eta < NetaBins; eta++){
+    for(int charge = 0; charge < 2; charge++){
+
+      px_ave[eta][charge]->Fill(px_track[eta][charge]/track_count[eta][charge], track_count[eta][charge]);
+      pt_ave[eta][charge]->Fill(pt_track[eta][charge]/track_count[eta][charge], track_count[eta][charge]);
+    }
+  }
+
 
 /*
 event average v1
@@ -431,13 +452,13 @@ DirectedFlowCorrelator::beginJob()
   trkPt = fs->make<TH1D>("trkPt", ";p_{T}(GeV)", Nptbins,ptBinsArray);
   trk_eta = fs->make<TH1D>("trk_eta", ";#eta", 50,-2.5,2.5);
 
-  // for(int eta = 0; eta < NetaBins/2; eta++){
+  for(int eta = 0; eta < NetaBins; eta++){
+    for(int charge = 0; charge < 2; charge++){
 
-  //   C_1_YY[eta] = fs->make<TH1D>(Form("C_1_YY_%d",eta),";C_1_YY", 100,-1,1);
-  //   C_1_YmY[eta] = fs->make<TH1D>(Form("C_1_YmY_%d",eta),";C_1_YmY", 100,-1,1);
-  //   C_2_YmY[eta] = fs->make<TH1D>(Form("C_2_YmY_%d",eta),";C_2_YmY", 100,-1,1);
-  //   C_3_YmY[eta] = fs->make<TH1D>(Form("C_3_YmY_%d",eta),";C_3_YmY", 100,-1,1);
-  // }
+      px_ave[eta][charge] = fs->make<TH1D>(Form("px_ave_%d_%d",eta,charge), 100,0,5.0);
+      pt_ave[eta][charge] = fs->make<TH1D>(Form("pt_ave_%d_%d",eta,charge), 100,0,5.0);
+    }
+  }
 
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
