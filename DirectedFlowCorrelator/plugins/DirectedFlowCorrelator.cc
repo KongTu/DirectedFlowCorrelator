@@ -240,12 +240,12 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
-    if( trkEta < -2.0 && trkEta > -2.4 ){
+    if( trkEta < -1.0 && trkEta > -2.4 ){
    
       Q_n3_trk_minus += q_vector(+1, 1, -weight, phi);//for scalar product in tracker
       Q_0_trk_minus += q_vector(0, 1, weight, phi);
     }
-    if( trkEta < 2.4 && trkEta > 2.0 ){
+    if( trkEta < 2.4 && trkEta > 1.0 ){
    
       Q_n3_trk_plus += q_vector(+1, 1, weight, phi);//for scalar product in tracker
       Q_0_trk_plus += q_vector(0, 1, weight, phi);
