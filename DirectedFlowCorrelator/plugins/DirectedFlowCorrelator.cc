@@ -455,8 +455,8 @@ DirectedFlowCorrelator::beginJob()
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
 
-      px_ave[eta][charge] = fs->make<TH1D>(Form("px_ave_%d_%d",eta,charge), 100,0,5.0);
-      pt_ave[eta][charge] = fs->make<TH1D>(Form("pt_ave_%d_%d",eta,charge), 100,0,5.0);
+      px_ave[eta][charge] = fs->make<TH1D>(Form("px_ave_%d_%d",eta,charge),";px", 100,0,5.0);
+      pt_ave[eta][charge] = fs->make<TH1D>(Form("pt_ave_%d_%d",eta,charge),";pt", 100,0,5.0);
     }
   }
 
