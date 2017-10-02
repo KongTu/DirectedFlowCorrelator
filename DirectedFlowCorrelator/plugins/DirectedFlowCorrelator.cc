@@ -321,12 +321,13 @@ event average v1
 
   c2_a_real->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
-  c2_c_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
+  c2_c_plus_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
+  c2_c_minus_real->Fill( Q_n3_trk_minus.Re()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
 
   c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
-  c2_c_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
-
+  c2_c_plus_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
+  c2_c_minus_imag->Fill( Q_n3_trk_minus.Im()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
 
 //numerator
   for(int eta = 0; eta < NetaBins; eta++){
@@ -482,11 +483,13 @@ DirectedFlowCorrelator::beginJob()
 
   c2_a_real = fs->make<TH1D>("c2_a_real",";c2_a_real", 1,-1,1);
   c2_b_real = fs->make<TH1D>("c2_b_real",";c2_b_real", 1,-1,1);
-  c2_c_real = fs->make<TH1D>("c2_c_real",";c2_c_real", 1,-1,1);
+  c2_c_plus_real = fs->make<TH1D>("c2_c_plus_real",";c2_c_real", 1,-1,1);
+  c2_c_minus_real = fs->make<TH1D>("c2_c_minus_real",";c2_c_real", 1,-1,1);
 
   c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
-  c2_c_imag = fs->make<TH1D>("c2_c_imag",";c2_c_imag", 1,-1,1);
+  c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_imag", 1,-1,1);
+  c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
 
 }
 
