@@ -252,7 +252,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if( !doPixelReco_){ if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue; }
     if(chi2n > offlineChi2_ ) continue;
 
-    if( doPixelReco_ ){ if(nhits != 3 || nhits != 4 || nhits != 5 || nhits != 6) continue;}
+    if( doPixelReco_ ){ if(nhits != 3 && nhits != 4 && nhits != 5 && nhits != 6) continue;}
     else{ if(nhits < offlinenhits_ ) continue; if( nPixelLayers <= 0 ) continue;}
     
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
