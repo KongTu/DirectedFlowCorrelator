@@ -31,6 +31,9 @@ DirectedFlowCorrelator::DirectedFlowCorrelator(const edm::ParameterSet& iConfig)
   vertexSrc_ = consumes<reco::VertexCollection>(vertexName_);
   towerSrc_ = consumes<CaloTowerCollection>(towerName_);
 
+  centralityToken_ = consumes<reco::Centrality>(iConfig.getParameter<edm::InputTag>("centralitySrc"));
+  centralityBinToken_ = consumes<int>(iConfig.getParameter<edm::InputTag>("centralityBinSrc"));
+
   Nmin_ = iConfig.getUntrackedParameter<int>("Nmin");
   Nmax_ = iConfig.getUntrackedParameter<int>("Nmax");
 
@@ -38,6 +41,7 @@ DirectedFlowCorrelator::DirectedFlowCorrelator(const edm::ParameterSet& iConfig)
   doEffCorrection_ = iConfig.getUntrackedParameter<bool>("doEffCorrection");
   useEtaGap_ = iConfig.getUntrackedParameter<bool>("useEtaGap");
   doBothSide_ = iConfig.getUntrackedParameter<bool>("doBothSide");
+  doPixelReco_ = iConfig.getUntrackedParameter<bool>("doPixelReco");
 
   eff_ = iConfig.getUntrackedParameter<int>("eff");
 
@@ -137,29 +141,44 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
   
   if( useCentrality_ ){
 
-    for( unsigned i = 0; i<towers->size(); ++ i){
-       const CaloTower & tower = (*towers)[ i ];
-       double eta = tower.eta();
-       bool isHF = tower.ietaAbs() > 29;
-          if(isHF && eta > 0){
-            etHFtowerSumPlus += tower.pt();
-          }
-          if(isHF && eta < 0){
-            etHFtowerSumMinus += tower.pt();
-          }
-    }
-    etHFtowerSum=etHFtowerSumPlus + etHFtowerSumMinus;
+    if( doPixelReco_ ){
 
-    int bin = -1;
-    for(int j=0; j<200; j++){
-      if( etHFtowerSum >= centBins_[j] ){
-         bin = j; break;
+      edm::Handle<reco::Centrality> centrality;
+      iEvent.getByToken(centralityToken_, centrality);
+      edm::Handle<int> cbin;
+      iEvent.getByToken(centralityBinToken_, cbin);
+      int hiBin = *cbin;
+
+      if( hiBin < Nmin_ || hiBin >= Nmax_ ) return;
+      cbinHist->Fill( hiBin );
+
+    }
+    else{
+
+      for( unsigned i = 0; i<towers->size(); ++ i){
+         const CaloTower & tower = (*towers)[ i ];
+         double eta = tower.eta();
+         bool isHF = tower.ietaAbs() > 29;
+            if(isHF && eta > 0){
+              etHFtowerSumPlus += tower.pt();
+            }
+            if(isHF && eta < 0){
+              etHFtowerSumMinus += tower.pt();
+            }
       }
-    }
+      etHFtowerSum=etHFtowerSumPlus + etHFtowerSumMinus;
 
-    int hiBin = bin;
-    if( hiBin < Nmin_ || hiBin >= Nmax_ ) return;
-    cbinHist->Fill( hiBin );
+      int bin = -1;
+      for(int j=0; j<200; j++){
+        if( etHFtowerSum >= centBins_[j] ){
+           bin = j; break;
+        }
+      }
+
+      int hiBin = bin;
+      if( hiBin < Nmin_ || hiBin >= Nmax_ ) return;
+      cbinHist->Fill( hiBin );
+    }
 
   }
 

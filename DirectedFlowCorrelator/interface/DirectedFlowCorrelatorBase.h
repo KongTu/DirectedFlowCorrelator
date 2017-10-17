@@ -119,7 +119,7 @@
 #include "DataFormats/RecoCandidate/interface/TrackAssociation.h"
 #include "DataFormats/TrackReco/interface/DeDxData.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
-
+#include "DataFormats/HeavyIonEvent/interface/Centrality.h"
 // Particle Flow
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 #include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
@@ -168,6 +168,9 @@ class DirectedFlowCorrelator : public edm::EDAnalyzer {
       edm::EDGetTokenT<reco::TrackCollection> trackSrc_;
       edm::EDGetTokenT<CaloTowerCollection> towerSrc_;
       edm::EDGetTokenT<reco::GenParticleCollection> genSrc_;
+      
+      edm::EDGetTokenT<reco::Centrality> centralityToken_;
+      edm::EDGetTokenT<int> centralityBinToken_;
 
       edm::InputTag vertexName_;
       edm::InputTag trackName_;
@@ -239,6 +242,7 @@ class DirectedFlowCorrelator : public edm::EDAnalyzer {
       bool doEffCorrection_;
       bool useEtaGap_;
       bool doBothSide_;
+      bool doPixelReco_;
 
       std::vector<double> etaBins_;
       std::vector<double> ptBins_;
