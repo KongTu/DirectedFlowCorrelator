@@ -458,10 +458,23 @@ DirectedFlowCorrelator::beginJob()
     ptBinsArray[i] = ptBins_[i];
   }
 
-  edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_eff_mult_v1.root");
-  TFile f1(fip1.fullPath().c_str(),"READ");
-  for(int i = 0; i < 5; i++){
-     effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
+  if( !doPixelReco_ ){
+    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_eff_mult_v1.root");
+    TFile f1(fip1.fullPath().c_str(),"READ");
+    for(int i = 0; i < 5; i++){
+       effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
+    }
+  }
+  else{
+    edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
+    TFile f2(fip2.fullPath().c_str(),"READ");
+     
+    effTable[0] = (TH2D*)f2.Get("Eff_50_100");
+    effTable[1] = (TH2D*)f2.Get("Eff_30_50");
+    effTable[2] = (TH2D*)f2.Get("Eff_10_30");
+    effTable[3] = (TH2D*)f2.Get("Eff_5_10");
+    effTable[4] = (TH2D*)f2.Get("Eff_0_5");
+    
   }
 
   Ntrk = fs->make<TH1D>("Ntrk",";Ntrk",5000,0,5000);
