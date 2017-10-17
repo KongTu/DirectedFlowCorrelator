@@ -248,7 +248,8 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
     if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
     if(fabs(dzvtx/dzerror) > offlineDCA_) continue;
-    if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue;
+    
+    if( !doPixelReco_){ if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue; }
     if(chi2n > offlineChi2_ ) continue;
 
     if( doPixelReco_ ){ if(nhits != 3 || nhits != 4 || nhits != 5 || nhits != 6) continue;}
