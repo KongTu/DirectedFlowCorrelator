@@ -565,12 +565,12 @@ event average v1
       N_v1_A_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFminus;
 
-      V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+      double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
 
       N_v1_B_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFplus;
       D_v1_B_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFplus;
 
-      V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+      double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
       c2_d0obs_v1[rap][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_d0obs_v1[rap][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
@@ -672,7 +672,7 @@ D0DirectedFlowCorrelator::beginJob()
   for(int rap = 0; rap < NyBins; rap++){
     for(int charge = 0; charge < 3; charge++){
 
-      D0Mass_Hist[rap][charge] = fs->make<TH1D>(Form("D0Mass_Hist_%d_%d",rap,charge),";mass",300,1.7,2.0)
+      D0Mass_Hist[rap][charge] = fs->make<TH1D>(Form("D0Mass_Hist_%d_%d",rap,charge),";mass",300,1.7,2.0);
     }
   }
 
