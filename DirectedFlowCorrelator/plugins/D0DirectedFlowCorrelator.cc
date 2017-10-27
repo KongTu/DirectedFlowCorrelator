@@ -467,7 +467,7 @@ D0 candiates' loop
             }
         //bkg region
           //D0
-            if( charge1 == + && mass1 < 0.14 && mass1 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
 
               Q_D0bkg_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
