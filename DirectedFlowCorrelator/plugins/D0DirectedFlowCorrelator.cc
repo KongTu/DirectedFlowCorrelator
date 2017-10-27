@@ -434,13 +434,13 @@ D0 candiates' loop
         //Fill mass in each y
         if( charge1 == -1 ){
 
-          cout << "charge1: " << charge1 << "mass: " << d1.mass() << endl;
+          cout << "charge1: " << charge1 << "mass: " << d1->mass() << endl;
 
           D0Mass_Hist[rap][0]->Fill( mass );
         }
         if( charge2 == -1 ){
 
-          cout << "charge2: " << charge2 << "mass: " << d2.mass() << endl;
+          cout << "charge2: " << charge2 << "mass: " << d2->mass() << endl;
 
           D0Mass_Hist[rap][1]->Fill( mass );
         }
