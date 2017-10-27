@@ -391,8 +391,8 @@ D0 candiates' loop
       double eta1 = d1->eta();
       double eta2 = d2->eta();
       //track charge
-      charge1 = d1->charge();
-      charge2 = d2->charge();
+      int charge1 = d1->charge();
+      int charge2 = d2->charge();
       //track pT error
       double ptErr1 = dau1->ptError();
       double ptErr2 = dau2->ptError();
@@ -579,8 +579,6 @@ event average v1
       c2_d0obs_trk_accept[rap][charge][1]->Fill(Q_D0obs_n1_1[rap][charge].Im()/Q_D0obs_0_1[rap][charge].Re(), Q_D0obs_0_1[rap][charge].Re());
 
       //bkg:
-      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
-
       N_v1_A_SP = Q_D0bkg_n1_1[rap][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_D0bkg_0_1[rap][charge]*Q_0_1_HFminus;
 
@@ -611,6 +609,7 @@ D0DirectedFlowCorrelator::beginJob()
   TH1D::SetDefaultSumw2();
 
   const int NetaBins = etaBins_.size() - 1 ;
+  const int NyBins = rapidityBins_.size() - 1;
 
   double ptBinsArray[100];
   const int Nptbins = ptBins_.size() - 1;
