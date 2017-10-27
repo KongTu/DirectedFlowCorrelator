@@ -393,6 +393,9 @@ D0 candiates' loop
       //track charge
       int charge1 = d1->charge();
       int charge2 = d2->charge();
+      //mass
+      double mass1 = d1->mass();
+      double mass2 = d2->mass();
       //track pT error
       double ptErr1 = dau1->ptError();
       double ptErr2 = dau2->ptError();
@@ -432,15 +435,11 @@ D0 candiates' loop
         if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] ){
 
         //Fill mass in each y
-        if( charge1 == -1 ){
-
-          cout << "charge1: " << charge1 << "mass: " << d1->mass() << endl;
+        if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
 
           D0Mass_Hist[rap][0]->Fill( mass );
         }
-        if( charge2 == -1 ){
-
-          cout << "charge2: " << charge2 << "mass: " << d2->mass() << endl;
+        if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 ){
 
           D0Mass_Hist[rap][1]->Fill( mass );
         }
@@ -449,13 +448,13 @@ D0 candiates' loop
 
         //signal region
           //D0
-            if( charge1 == -1 && mass > D0MassLow_ && mass < D0MassHigh_ ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && mass > D0MassLow_ && mass < D0MassHigh_ ){
 
               Q_D0obs_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
             }
           //D0bar
-            if( charge2 == -1 && mass > D0MassLow_ && mass < D0MassHigh_ ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && mass > D0MassLow_ && mass < D0MassHigh_ ){
 
               Q_D0obs_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
@@ -468,14 +467,14 @@ D0 candiates' loop
             }
         //bkg region
           //D0
-            if( charge1 == -1 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
+            if( charge1 == + && mass1 < 0.14 && mass1 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
 
               Q_D0bkg_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
 
             }
           //D0bar
-            if( charge2 == -1 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
 
               Q_D0bkg_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
