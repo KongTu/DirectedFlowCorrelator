@@ -216,11 +216,16 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       TH1D* c2_c_plus_imag;
       TH1D* c2_c_minus_imag;
 
-      TH1D* px_ave[20][2];
-      TH1D* pt_ave[20][2];
-
       TH1D* c2_v1[20][2][2];
       TH1D* c2_trk_accept[20][2][2];
+
+      TH1D* c2_d0obs_v1[20][3][2];
+      TH1D* c2_d0obs_trk_accept[20][3][2];
+
+      TH1D* c2_d0bkg_v1[20][3][2];
+      TH1D* c2_d0bkg_trk_accept[20][3][2];
+
+      TH1D* D0Mass_Hist[20][3];
 
       TH1D* C_1_YY[20];
       TH1D* C_1_YmY[20];
@@ -256,17 +261,12 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       bool doPixelReco_;
 
       std::vector<double> etaBins_;
+      std::vector<double> rapidityBins_;
       std::vector<double> ptBins_;
       std::vector<double> centBins_;
 
-      double nn = 1.0;     // v2 or v3 etc
-      double etamaxA_;
-      double etaminA_;
-      double etamaxB_;
-      double etaminB_;
-      double etmax_;
-      double etmin_;
-
+      double D0MassHigh_;
+      double D0MassLow_;
       double D0EtaHigh_;
       double D0EtaLow_;
       double D0PtHigh_;

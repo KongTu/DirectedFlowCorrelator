@@ -18,7 +18,9 @@
 <use name="DataFormats/TrackingRecHit"/>
 <use name="DataFormats/TrajectorySeed"/>
 
-
+<use name="TrackingTools/TransientTrack"/>
+<use name="TrackingTools/Records"/>
+<use name="TrackingTools/PatternTools"/>
 
 <use name="RecoBTag/SecondaryVertex"/>
 <use name="RecoHI/HiCentralityAlgos"/>
