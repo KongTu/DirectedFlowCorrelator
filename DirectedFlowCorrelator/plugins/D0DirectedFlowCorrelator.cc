@@ -565,12 +565,12 @@ event average v1
       N_v1_A_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFminus;
 
-      double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+      V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
 
       N_v1_B_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFplus;
       D_v1_B_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFplus;
 
-      double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+      V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
       c2_d0obs_v1[rap][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_d0obs_v1[rap][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
@@ -582,12 +582,12 @@ event average v1
       N_v1_A_SP = Q_D0bkg_n1_1[rap][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_D0bkg_0_1[rap][charge]*Q_0_1_HFminus;
 
-      double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+      V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
 
       N_v1_B_SP = Q_D0bkg_n1_1[rap][charge]*Q_n3_1_HFplus;
       D_v1_B_SP = Q_D0bkg_0_1[rap][charge]*Q_0_1_HFplus;
 
-      double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+      V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
       c2_d0bkg_v1[rap][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_d0bkg_v1[rap][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
