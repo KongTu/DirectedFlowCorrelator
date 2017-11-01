@@ -46,6 +46,7 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   useEtaGap_ = iConfig.getUntrackedParameter<bool>("useEtaGap");
   doBothSide_ = iConfig.getUntrackedParameter<bool>("doBothSide");
   doPixelReco_ = iConfig.getUntrackedParameter<bool>("doPixelReco");
+  doHiReco_ = iConfig.getUntrackedParameter<bool>("doHiReco");
 
   eff_ = iConfig.getUntrackedParameter<int>("eff");
 
@@ -166,7 +167,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   
   if( useCentrality_ ){
 
-    if( doPixelReco_ ){
+    if( doPixelReco_ || doHiReco_ ){
 
       edm::Handle<reco::Centrality> centrality;
       iEvent.getByToken(centralityToken_, centrality);
@@ -272,12 +273,13 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
     if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
     if(fabs(dzvtx/dzerror) > offlineDCA_) continue;
-    
     if( !doPixelReco_){ if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue; }
     if(chi2n > offlineChi2_ ) continue;
-
     if( doPixelReco_ ){ if(nhits != 3 && nhits != 4 && nhits != 5 && nhits != 6) continue;}
-    else{ if(nhits < offlinenhits_ ) continue; if( nPixelLayers <= 0 ) continue;}
+    else{ 
+      if(nhits < offlinenhits_ ) continue; 
+      if( nPixelLayers <= 0 ) continue;
+    }
     
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
@@ -620,12 +622,22 @@ D0DirectedFlowCorrelator::beginJob()
     ptBinsArray[i] = ptBins_[i];
   }
 
-  if( !doPixelReco_ ){
+  if( !doPixelReco_ && !doHiReco_ ){
     edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_eff_mult_v1.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     for(int i = 0; i < 5; i++){
        effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
     }
+  }
+  if( doHiReco_ && !doPixelReco_ ){
+    edm::FileInPath fip3("DirectedFlowCorrelator/DirectedFlowCorrelator/data/PbPb_MB_TT_5TeV_v2.root");
+    TFile f3(fip3.fullPath().c_str(),"READ");
+
+    effTable[0] = (TH2D*)f2.Get("rTotalEff3D_50_100");
+    effTable[1] = (TH2D*)f2.Get("rTotalEff3D_30_50");
+    effTable[2] = (TH2D*)f2.Get("rTotalEff3D_10_30");
+    effTable[3] = (TH2D*)f2.Get("rTotalEff3D_5_10");
+    effTable[4] = (TH2D*)f2.Get("rTotalEff3D_0_5");
   }
   else{
     edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");

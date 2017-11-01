@@ -259,6 +259,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       bool useEtaGap_;
       bool doBothSide_;
       bool doPixelReco_;
+      bool doHiReco_;
 
       std::vector<double> etaBins_;
       std::vector<double> rapidityBins_;
