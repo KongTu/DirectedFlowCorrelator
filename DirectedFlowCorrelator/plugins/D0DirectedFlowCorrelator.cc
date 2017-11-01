@@ -633,11 +633,11 @@ D0DirectedFlowCorrelator::beginJob()
     edm::FileInPath fip3("DirectedFlowCorrelator/DirectedFlowCorrelator/data/PbPb_MB_TT_5TeV_v2.root");
     TFile f3(fip3.fullPath().c_str(),"READ");
 
-    effTable[0] = (TH2D*)f2.Get("rTotalEff3D_50_100");
-    effTable[1] = (TH2D*)f2.Get("rTotalEff3D_30_50");
-    effTable[2] = (TH2D*)f2.Get("rTotalEff3D_10_30");
-    effTable[3] = (TH2D*)f2.Get("rTotalEff3D_5_10");
-    effTable[4] = (TH2D*)f2.Get("rTotalEff3D_0_5");
+    effTable[0] = (TH2D*)f3.Get("rTotalEff3D_50_100");
+    effTable[1] = (TH2D*)f3.Get("rTotalEff3D_30_50");
+    effTable[2] = (TH2D*)f3.Get("rTotalEff3D_10_30");
+    effTable[3] = (TH2D*)f3.Get("rTotalEff3D_5_10");
+    effTable[4] = (TH2D*)f3.Get("rTotalEff3D_0_5");
   }
   else{
     edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
