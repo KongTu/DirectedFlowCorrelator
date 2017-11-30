@@ -44,7 +44,7 @@ ana = cms.EDAnalyzer('D0DirectedFlowCorrelator',
               D03DAngleHigh = cms.untracked.vdouble(0.12,0.08,0.12),
               D0DlosLow = cms.untracked.vdouble(5.00,5.00,5.00),
               TrkPtLow = cms.untracked.vdouble(1.0,1.5,1.5),
-              D0MassWidth = cms.untracked.vdouble(0.07,0.07,0.07),
+              D0MassWidth = cms.untracked.vdouble(0.02,0.02,0.02,0.02,0.02,0.02),
 
               TrkEtaHigh = cms.untracked.double(2.4),
               TrkEtaLow = cms.untracked.double(-2.4),
