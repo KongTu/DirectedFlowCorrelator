@@ -755,9 +755,9 @@ D0DirectedFlowCorrelator::beginJob()
   c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
 
   c2_ab_one = fs->make<TH1D>("c2_ab_one",";c2_ab_one", 1,-1,1);
-  
-  c2_ab_real = fs->make<TH1D>("c2_ab_real",";c2_ab_real", 1,-1,1);
-  c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
+
+  c2_ab_one_real = fs->make<TH1D>("c2_ab_one_real",";c2_ab_one_real", 1,-1,1);
+  c2_ab_one_imag = fs->make<TH1D>("c2_ab_one_imag",";c2_ab_one_imag", 1,-1,1);
 
 }
 

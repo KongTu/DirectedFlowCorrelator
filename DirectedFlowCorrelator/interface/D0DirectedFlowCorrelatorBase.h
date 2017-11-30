@@ -219,8 +219,8 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
 
       TH1D* c2_ab_one;
 
-      TH1D* c2_ab_real;
-      TH1D* c2_ab_imag;
+      TH1D* c2_ab_one_real;
+      TH1D* c2_ab_one_imag;
 
       TH1D* c2_v1[20][2][3];
       TH1D* c2_trk_accept[20][2][3];
