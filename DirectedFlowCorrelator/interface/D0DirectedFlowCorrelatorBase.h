@@ -274,17 +274,19 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       double D0PtLow_;
       double D0YHigh_;
       double D0YLow_;
-      double D0DcaHigh_;
-      double D0DcaLow_;
-      double D0VtxProbHigh_;
-      double D0VtxProbLow_;
-      double D03DAngleHigh_;
-      double D03DAngleLow_;
-      double D0DlosHigh_;
-      double D0DlosLow_;
 
-      double TrkPtHigh_;
-      double TrkPtLow_;
+      std::vector<double> D0DcaHigh_;
+      std::vector<double> D0DcaLow_;
+      std::vector<double> D0VtxProbHigh_;
+      std::vector<double> D0VtxProbLow_;
+      std::vector<double> D03DAngleHigh_;
+      std::vector<double> D03DAngleLow_;
+      std::vector<double> D0DlosHigh_;
+      std::vector<double> D0DlosLow_;
+
+      std::vector<double> TrkPtHigh_;
+      std::vector<double> TrkPtLow_;
+
       double TrkEtaHigh_;
       double TrkEtaLow_;
       double TrkChiOverNLayerHigh_;
