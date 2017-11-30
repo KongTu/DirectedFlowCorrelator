@@ -239,7 +239,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
               Q_n3_1_HFplusANDminus += q_vector(-1, 1, w, caloPhi);
-              Q_0_1_HFplusANDminus +- q_vector(0, 1, w, caloPhi);
+              Q_0_1_HFplusANDminus += q_vector(0, 1, w, caloPhi);
 
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
@@ -248,7 +248,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
 
               Q_n3_1_HFplusANDminus += q_vector(-1, 1, -w, caloPhi);
-              Q_0_1_HFplusANDminus +- q_vector(0, 1, w, caloPhi);
+              Q_0_1_HFplusANDminus += q_vector(0, 1, w, caloPhi);
           }
           else{continue;}
   }
