@@ -86,7 +86,8 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   D03DAngleHigh_ = iConfig.getUntrackedParameter<std::vector<double>>("D03DAngleHigh");
   D0DlosLow_ = iConfig.getUntrackedParameter<std::vector<double>>("D0DlosLow");
   TrkPtLow_ = iConfig.getUntrackedParameter<std::vector<double>>("TrkPtLow");
-  
+  D0MassWidth_ = iConfig.getUntrackedParameter<std::vector<double>>("D0MassWidth");
+
   TrkEtaHigh_ = iConfig.getUntrackedParameter<double>("TrkEtaHigh", 2.4);
   TrkEtaLow_ = iConfig.getUntrackedParameter<double>("TrkEtaLow", -2.4);
   TrkChiOverNLayerHigh_ = iConfig.getUntrackedParameter<double>("TrkChiOverNLayerHigh", 0.15);
@@ -457,39 +458,39 @@ D0 candiates' loop
 
         //signal region
           //D0
-            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && mass > D0MassLow_ && mass < D0MassHigh_ ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && mass > (DOMass-2*D0MassWidth_[rap]) && mass < (DOMass+2*D0MassWidth_[rap]) ){
               
               Q_D0obs_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
             }
           //D0bar
-            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && mass > D0MassLow_ && mass < D0MassHigh_ ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && mass > (DOMass-2*D0MassWidth_[rap]) && mass < (DOMass+2*D0MassWidth_[rap]) ){
 
               Q_D0obs_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
             }
           //inclusive D0
-            if( mass > D0MassLow_ && mass < D0MassHigh_ ){
+            if( mass > (DOMass-2*D0MassWidth_[rap]) && mass < (DOMass+2*D0MassWidth_[rap]) ){
 
               Q_D0obs_n1_1[rap][2] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][2] += q_vector(0, 1, weight_D0, phi);
             }
         //bkg region
           //D0
-            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && (mass < (DOMass-3*D0MassWidth_[rap]) || mass > (DOMass+3*D0MassWidth_[rap])) ){
 
               Q_D0bkg_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
 
             }
           //D0bar
-            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && (mass < D0MassLow_ || mass > D0MassHigh_) ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && (mass < (DOMass-3*D0MassWidth_[rap]) || mass > (DOMass+3*D0MassWidth_[rap])) ){
 
               Q_D0bkg_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
             }
           //inclusive D0
-            if( mass < D0MassLow_ || mass > D0MassHigh_ ){
+            if( mass < (DOMass-3*D0MassWidth_[rap]) || mass > (DOMass+3*D0MassWidth_[rap]) ){
 
               Q_D0bkg_n1_1[rap][2] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][2] += q_vector(0, 1, weight_D0, phi);

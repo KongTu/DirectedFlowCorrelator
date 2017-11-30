@@ -146,6 +146,7 @@
 #define PI 3.1415926
 #define K0sMass 0.497614
 #define LambdaMass 1.115683
+#define D0Mass 1.8648
 
 using namespace std;
 using namespace reco;
@@ -286,6 +287,8 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
 
       std::vector<double> TrkPtHigh_;
       std::vector<double> TrkPtLow_;
+
+      std::vector<double> D0MassWidth_;
 
       double TrkEtaHigh_;
       double TrkEtaLow_;
