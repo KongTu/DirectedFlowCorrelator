@@ -80,12 +80,13 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   D0PtLow_ = iConfig.getUntrackedParameter<double>("D0PtLow", 1.0);
   D0YHigh_ = iConfig.getUntrackedParameter<double>("D0YHigh", 1.8);
   D0YLow_ = iConfig.getUntrackedParameter<double>("D0YLow", -1.8);
-  D0DcaHigh_ = iConfig.getUntrackedParameter<double>("D0DcaHigh", 0.008);
-  D0VtxProbLow_ = iConfig.getUntrackedParameter<double>("D0VtxProbLow", 0.25);
-  D03DAngleHigh_ = iConfig.getUntrackedParameter<double>("D03DAngleHigh", 0.12);
-  D0DlosLow_ = iConfig.getUntrackedParameter<double>("D0DlosLow", 5.00);
-
-  TrkPtLow_ = iConfig.getUntrackedParameter<double>("TrkPtLow", 0.7);
+  
+  D0DcaHigh_ = iConfig.getUntrackedParameter<std::vector<double>>("D0DcaHigh");
+  D0VtxProbLow_ = iConfig.getUntrackedParameter<std::vector<double>>("D0VtxProbLow");
+  D03DAngleHigh_ = iConfig.getUntrackedParameter<std::vector<double>>("D03DAngleHigh");
+  D0DlosLow_ = iConfig.getUntrackedParameter<std::vector<double>>("D0DlosLow");
+  TrkPtLow_ = iConfig.getUntrackedParameter<std::vector<double>>("TrkPtLow");
+  
   TrkEtaHigh_ = iConfig.getUntrackedParameter<double>("TrkEtaHigh", 2.4);
   TrkEtaLow_ = iConfig.getUntrackedParameter<double>("TrkEtaLow", -2.4);
   TrkChiOverNLayerHigh_ = iConfig.getUntrackedParameter<double>("TrkChiOverNLayerHigh", 0.15);
@@ -371,11 +372,17 @@ D0 candiates' loop
 
       if (pt < D0PtLow_) continue;
       if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
-      if (d0dca > D0DcaHigh_) continue;
+      
+      int rap_index = 0;
 
-      if (VtxProb < D0VtxProbLow_) continue;
-      if (agl_abs > D03DAngleHigh_) continue;
-      if (dlos < D0DlosLow_) continue;
+      if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
+      if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
+      if( fabs(y_D0) > 1.2 && fabs(y_D0) < 1.8 ){rap_index = 2;}
+
+      if (d0dca > D0DcaHigh_[rap_index]) continue;
+      if (VtxProb < D0VtxProbLow_[rap_index]) continue;
+      if (agl_abs > D03DAngleHigh_[rap_index]) continue;
+      if (dlos < D0DlosLow_[rap_index]) continue;
 
       const reco::Candidate * d1 = trk.daughter(0);
       const reco::Candidate * d2 = trk.daughter(1);
@@ -419,8 +426,8 @@ D0 candiates' loop
       if (!trkquality1) continue;
       if (!trkquality2) continue;
 
-      if (pt1 < TrkPtLow_) continue;
-      if (pt2 < TrkPtLow_) continue;
+      if (pt1 < TrkPtLow_[rap_index]) continue;
+      if (pt2 < TrkPtLow_[rap_index]) continue;
 
       if (eta1 < TrkEtaLow_ || eta1 > TrkEtaHigh_) continue;
       if (eta2 < TrkEtaLow_ || eta2 > TrkEtaHigh_) continue;
