@@ -215,7 +215,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   const int NetaBins = etaBins_.size() - 1;
   const int NyBins = rapidityBins_.size() - 1;
 
-  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus;
+  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus, Q_n3_1_HFplusANDminus, Q_0_1_HFplusANDminus;
   //HF towers loop to fill the towers' Q-vectors:
   TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
   //charge independent, |eta|<1.0
@@ -238,12 +238,17 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
+              Q_n3_1_HFplusANDminus += q_vector(-1, 1, w, caloPhi);
+              Q_0_1_HFplusANDminus +- q_vector(0, 1, w, caloPhi);
+
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
 
+              Q_n3_1_HFplusANDminus += q_vector(-1, 1, -w, caloPhi);
+              Q_0_1_HFplusANDminus +- q_vector(0, 1, w, caloPhi);
           }
           else{continue;}
   }
@@ -543,11 +548,21 @@ event average v1
   c2_c_plus_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
   c2_c_minus_imag->Fill( Q_n3_trk_minus.Im()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
 
+//combine two HF into one plane:
+
+  N_2_trk = Q_n3_1_HFplusANDminus*TComplex::Conjugate(Q_n3_1_HFplusANDminus);
+  D_2_trk = Q_0_1_HFplusANDminus*Q_0_1_HFplusANDminus;
+
+  c2_ab_one->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+
+  c2_ab_one_real->Fill( Q_n3_1_HFplusANDminus.Re()/Q_0_1_HFplusANDminus.Re(), Q_0_1_HFplusANDminus.Re() );
+  c2_ab_one_imag->Fill( Q_n3_1_HFplusANDminus.Im()/Q_0_1_HFplusANDminus.Re(), Q_0_1_HFplusANDminus.Re() );
+
 //numerator charged particle
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
 
-      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
+      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP, N_v1_AB_SP, D_v1_AB_SP;
 
       N_v1_A_SP = Q_n1_1[eta][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_0_1[eta][charge]*Q_0_1_HFminus;
@@ -559,8 +574,15 @@ event average v1
 
       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
+      //use one plane
+      N_v1_AB_SP = Q_n1_1[eta][charge]*Q_n3_1_HFplusANDminus;
+      D_v1_AB_SP = Q_0_1[eta][charge]*Q_0_1_HFplusANDminus;
+
+      double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
+
       c2_v1[eta][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_v1[eta][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
+      c2_v1[eta][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
       c2_trk_accept[eta][charge][0]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
       c2_trk_accept[eta][charge][1]->Fill(Q_n1_1[eta][charge].Im()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
@@ -573,7 +595,7 @@ event average v1
     for(int charge = 0; charge < 3; charge++){
       
       //obs:
-      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
+      TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP, N_v1_AB_SP, D_v1_AB_SP;
 
       N_v1_A_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFminus;
@@ -584,9 +606,16 @@ event average v1
       D_v1_B_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFplus;
 
       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+     
+      //use one plane
+      N_v1_AB_SP = Q_D0obs_n1_1[rap][charge]*Q_n3_1_HFplusANDminus;
+      D_v1_AB_SP = Q_D0obs_0_1[rap][charge]*Q_0_1_HFplusANDminus;
+
+      double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
 
       c2_d0obs_v1[rap][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_d0obs_v1[rap][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
+      c2_d0obs_v1[rap][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
       c2_d0obs_trk_accept[rap][charge][0]->Fill(Q_D0obs_n1_1[rap][charge].Re()/Q_D0obs_0_1[rap][charge].Re(), Q_D0obs_0_1[rap][charge].Re());
       c2_d0obs_trk_accept[rap][charge][1]->Fill(Q_D0obs_n1_1[rap][charge].Im()/Q_D0obs_0_1[rap][charge].Re(), Q_D0obs_0_1[rap][charge].Re());
@@ -602,8 +631,15 @@ event average v1
 
       V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
+      //use one plane
+      N_v1_AB_SP = Q_D0bkg_n1_1[rap][charge]*Q_n3_1_HFplusANDminus;
+      D_v1_AB_SP = Q_D0bkg_0_1[rap][charge]*Q_0_1_HFplusANDminus;
+
+      V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
+
       c2_d0bkg_v1[rap][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_d0bkg_v1[rap][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
+      c2_d0bkg_v1[rap][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
       c2_d0bkg_trk_accept[rap][charge][0]->Fill(Q_D0bkg_n1_1[rap][charge].Re()/Q_D0bkg_0_1[rap][charge].Re(), Q_D0bkg_0_1[rap][charge].Re());
       c2_d0bkg_trk_accept[rap][charge][1]->Fill(Q_D0bkg_n1_1[rap][charge].Im()/Q_D0bkg_0_1[rap][charge].Re(), Q_D0bkg_0_1[rap][charge].Re());
@@ -669,7 +705,7 @@ D0DirectedFlowCorrelator::beginJob()
 
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
-      for(int dir = 0; dir < 2; dir++){
+      for(int dir = 0; dir < 3; dir++){
 
         c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
         c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 1,-1,1);
@@ -680,7 +716,7 @@ D0DirectedFlowCorrelator::beginJob()
 
   for(int rap = 0; rap < NyBins; rap++){
     for(int charge = 0; charge < 3; charge++){
-      for(int dir = 0; dir < 2; dir++){
+      for(int dir = 0; dir < 3; dir++){
 
         c2_d0obs_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
         c2_d0obs_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
@@ -717,6 +753,11 @@ D0DirectedFlowCorrelator::beginJob()
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
   c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_imag", 1,-1,1);
   c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
+
+  c2_ab_one = fs->make<TH1D>("c2_ab_one",";c2_ab_one", 1,-1,1);
+  
+  c2_ab_real = fs->make<TH1D>("c2_ab_real",";c2_ab_real", 1,-1,1);
+  c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
 
 }
 
