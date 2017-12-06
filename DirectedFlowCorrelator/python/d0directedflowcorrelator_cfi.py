@@ -38,6 +38,7 @@ ana = cms.EDAnalyzer('D0DirectedFlowCorrelator',
               D0PtLow = cms.untracked.double(2.0),
               D0YHigh = cms.untracked.double(2.0),
               D0YLow = cms.untracked.double(-2.0),
+              NSigmas = cms.untracked.double(3.0),
               
               D0DcaHigh = cms.untracked.vdouble(0.012,0.012,0.008),
               D0VtxProbLow = cms.untracked.vdouble(0.0,0.0,0.08),
