@@ -280,6 +280,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       double D0PtLow_;
       double D0YHigh_;
       double D0YLow_;
+      double NSigmas_;
 
       std::vector<double> D0DcaHigh_;
       std::vector<double> D0DcaLow_;

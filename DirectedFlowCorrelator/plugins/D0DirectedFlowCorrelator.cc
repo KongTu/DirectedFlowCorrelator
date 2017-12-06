@@ -80,6 +80,7 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   D0PtLow_ = iConfig.getUntrackedParameter<double>("D0PtLow", 1.0);
   D0YHigh_ = iConfig.getUntrackedParameter<double>("D0YHigh", 1.8);
   D0YLow_ = iConfig.getUntrackedParameter<double>("D0YLow", -1.8);
+  NSigmas_ = iConfig.getUntrackedParameter<double>("NSigmas", 3.0);
   
   D0DcaHigh_ = iConfig.getUntrackedParameter<std::vector<double>>("D0DcaHigh");
   D0VtxProbLow_ = iConfig.getUntrackedParameter<std::vector<double>>("D0VtxProbLow");
@@ -383,7 +384,7 @@ D0 candiates' loop
 
       if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
       if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
-      if( fabs(y_D0) > 1.2 && fabs(y_D0) < 1.8 ){rap_index = 2;}
+      if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
 
       if (d0dca > D0DcaHigh_[rap_index]) continue;
       if (VtxProb < D0VtxProbLow_[rap_index]) continue;
@@ -463,39 +464,39 @@ D0 candiates' loop
 
         //signal region
           //D0
-            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && mass > (D0Mass-2*D0MassWidth_[rap]) && mass < (D0Mass+2*D0MassWidth_[rap]) ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && mass > (D0Mass-NSigmas_*D0MassWidth_[rap]) && mass < (D0Mass+NSigmas_*D0MassWidth_[rap]) ){
               
               Q_D0obs_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
             }
           //D0bar
-            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && mass > (D0Mass-2*D0MassWidth_[rap]) && mass < (D0Mass+2*D0MassWidth_[rap]) ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && mass > (D0Mass-NSigmas_*D0MassWidth_[rap]) && mass < (D0Mass+NSigmas_*D0MassWidth_[rap]) ){
 
               Q_D0obs_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
             }
           //inclusive D0
-            if( mass > (D0Mass-2*D0MassWidth_[rap]) && mass < (D0Mass+2*D0MassWidth_[rap]) ){
+            if( mass > (D0Mass-NSigmas_*D0MassWidth_[rap]) && mass < (D0Mass+NSigmas_*D0MassWidth_[rap]) ){
 
               Q_D0obs_n1_1[rap][2] += q_vector(+1, 1, weight_D0, phi);
               Q_D0obs_0_1[rap][2] += q_vector(0, 1, weight_D0, phi);
             }
         //bkg region
           //D0
-            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && (mass < (D0Mass-3*D0MassWidth_[rap]) || mass > (D0Mass+3*D0MassWidth_[rap])) ){
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 && (mass < (D0Mass-NSigmas_*D0MassWidth_[rap]) || mass > (D0Mass+NSigmas_*D0MassWidth_[rap])) ){
 
               Q_D0bkg_n1_1[rap][0] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][0] += q_vector(0, 1, weight_D0, phi);
 
             }
           //D0bar
-            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && (mass < (D0Mass-3*D0MassWidth_[rap]) || mass > (D0Mass+3*D0MassWidth_[rap])) ){
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 && (mass < (D0Mass-NSigmas_*D0MassWidth_[rap]) || mass > (D0Mass+NSigmas_*D0MassWidth_[rap])) ){
 
               Q_D0bkg_n1_1[rap][1] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][1] += q_vector(0, 1, weight_D0, phi);
             }
           //inclusive D0
-            if( mass < (D0Mass-3*D0MassWidth_[rap]) || mass > (D0Mass+3*D0MassWidth_[rap]) ){
+            if( mass < (D0Mass-NSigmas_*D0MassWidth_[rap]) || mass > (D0Mass+NSigmas_*D0MassWidth_[rap]) ){
 
               Q_D0bkg_n1_1[rap][2] += q_vector(+1, 1, weight_D0, phi);
               Q_D0bkg_0_1[rap][2] += q_vector(0, 1, weight_D0, phi);
