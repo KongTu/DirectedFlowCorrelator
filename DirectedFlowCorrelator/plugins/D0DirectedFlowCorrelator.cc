@@ -226,11 +226,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   //D0 Q-vectors for both obs and bkg
   TComplex Q_D0obs_n1_1[NyBins][3], Q_D0obs_0_1[NyBins][3], Q_D0bkg_n1_1[NyBins][3], Q_D0bkg_0_1[NyBins][3];
   //D0 mass-fit method, no separation of obs and bkg
-  TComplex Q_D0_n1_1[NyBins][NyBins], Q_D0_0_1[NyBins][NyBins];
-  TComplex Q_D0bar_n1_1[NyBins][NyBins], Q_D0bar_0_1[NyBins][NyBins];
-  TComplex Q_D0all_n1_1[NyBins][NyBins], Q_D0all_0_1[NyBins][NyBins];
-
-
+  TComplex Q_D0_n1_1[NyBins][30][3], Q_D0_0_1[NyBins][30][3];
 
   for(unsigned i = 0; i < towers->size(); ++i){
 
@@ -463,19 +459,19 @@ D0 candiates' loop
           //D0
             if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
               
-              Q_D0_n1_1[rap][imass] += q_vector(+1, 1, weight_D0, phi);
-              Q_D0_0_1[rap][imass] += q_vector(0, 1, weight_D0, phi);
+              Q_D0_n1_1[rap][imass][0] += q_vector(+1, 1, weight_D0, phi);
+              Q_D0_0_1[rap][imass][0] += q_vector(0, 1, weight_D0, phi);
             }
           //D0bar
             if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 ){
 
-              Q_D0bar_n1_1[rap][imass] += q_vector(+1, 1, weight_D0, phi);
-              Q_D0bar_0_1[rap][imass] += q_vector(0, 1, weight_D0, phi);
+              Q_D0_n1_1[rap][imass][1] += q_vector(+1, 1, weight_D0, phi);
+              Q_D0_0_1[rap][imass][1] += q_vector(0, 1, weight_D0, phi);
             }
           //inclusive D0
   
-            Q_D0all_n1_1[rap][imass] += q_vector(+1, 1, weight_D0, phi);
-            Q_D0all_0_1[rap][imass] += q_vector(0, 1, weight_D0, phi);
+            Q_D0_n1_1[rap][imass][2] += q_vector(+1, 1, weight_D0, phi);
+            Q_D0_0_1[rap][imass][2] += q_vector(0, 1, weight_D0, phi);
             
           }
         }
@@ -688,36 +684,21 @@ event average v1
     for(int imass = 0; imass < NmassBins; imass++){
       for(int charge = 0; charge < 3; charge++){
         
-        TComplex Q_temp_n1, Q_temp_0;
-        if( charge == 0 ) {
-          Q_temp_n1 = Q_D0_n1_1[rap][imass];
-          Q_temp_0  = Q_D0_0_1[rap][imass];
-        }
-        if( charge == 1 ) {
-          Q_temp_n1 = Q_D0bar_n1_1[rap][imass];
-          Q_temp_0  = Q_D0bar_0_1[rap][imass];
-        }
-        if( charge == 2 ) {
-          Q_temp_n1 = Q_D0all_n1_1[rap][imass];
-          Q_temp_0  = Q_D0all_0_1[rap][imass];
-        }
-
-
         TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP, N_v1_AB_SP, D_v1_AB_SP;
 
-        N_v1_A_SP = Q_temp_n1*Q_n3_1_HFminus;
-        D_v1_A_SP = Q_temp_0*Q_0_1_HFminus;
+        N_v1_A_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFminus;
+        D_v1_A_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFminus;
 
         double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
 
-        N_v1_B_SP = Q_temp_n1*Q_n3_1_HFplus;
-        D_v1_B_SP = Q_temp_0*Q_0_1_HFplus;
+        N_v1_B_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFplus;
+        D_v1_B_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFplus;
 
         double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
        
         //use one plane
-        N_v1_AB_SP = Q_temp_n1*Q_n3_1_HFplusANDminus;
-        D_v1_AB_SP = Q_temp_0*Q_0_1_HFplusANDminus;
+        N_v1_AB_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFplusANDminus;
+        D_v1_AB_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFplusANDminus;
 
         double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
 
@@ -725,8 +706,8 @@ event average v1
         c2_d0_v1[rap][imass][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
         c2_d0_v1[rap][imass][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
-        c2_d0_trk_accept[rap][imass][charge][0]->Fill(Q_temp_n1.Re()/Q_temp_0.Re(), Q_temp_0.Re());
-        c2_d0_trk_accept[rap][imass][charge][1]->Fill(Q_temp_n1.Im()/Q_temp_0.Re(), Q_temp_0.Re());
+        c2_d0_trk_accept[rap][imass][charge][0]->Fill(Q_D0_n1_1[rap][imass][charge].Re()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
+        c2_d0_trk_accept[rap][imass][charge][1]->Fill(Q_D0_n1_1[rap][imass][charge].Im()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
         
       }
     }
