@@ -218,7 +218,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   const int NyBins = rapidityBins_.size() - 1;
   const int NmassBins = massBins_.size() - 1;
 
-  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus, Q_n3_1_HFplusANDminus, Q_0_1_HFplusANDminus;
+  TComplex Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus, Q_n3_1_HFplusANDminus, Q_0_1_HFplusANDminus;
   //HF towers loop to fill the towers' Q-vectors:
   TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
   //charge independent, |eta|<1.0
@@ -226,7 +226,8 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   //D0 Q-vectors for both obs and bkg
   TComplex Q_D0obs_n1_1[NyBins][3], Q_D0obs_0_1[NyBins][3], Q_D0bkg_n1_1[NyBins][3], Q_D0bkg_0_1[NyBins][3];
   //D0 mass-fit method, no separation of obs and bkg
-  TComplex Q_D0_n1_1[NyBins][NmassBins][3], Q_D0_0_1[NyBins][NmassBins][3];
+  TComplex Q_D0_n1_1[NyBins][NmassBins][3];
+  TComplex Q_D0_0_1[NyBins][NmassBins][3];
 
 
 
