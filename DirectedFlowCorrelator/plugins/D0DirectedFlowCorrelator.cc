@@ -725,8 +725,8 @@ event average v1
         c2_d0_v1[rap][imass][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
         c2_d0_v1[rap][imass][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
-        c2_d0_trk_accept[rap][imass][charge][0]->Fill(Q_D0_n1_1[rap][imass][charge].Re()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
-        c2_d0_trk_accept[rap][imass][charge][1]->Fill(Q_D0_n1_1[rap][imass][charge].Im()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
+        c2_d0_trk_accept[rap][imass][charge][0]->Fill(Q_temp_n1.Re()/Q_temp_0.Re(), Q_temp_0.Re());
+        c2_d0_trk_accept[rap][imass][charge][1]->Fill(Q_temp_n1.Im()/Q_temp_0.Re(), Q_temp_0.Re());
         
       }
     }
