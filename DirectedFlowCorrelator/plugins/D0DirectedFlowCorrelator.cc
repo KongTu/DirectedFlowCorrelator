@@ -226,9 +226,9 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   //D0 Q-vectors for both obs and bkg
   TComplex Q_D0obs_n1_1[NyBins][3], Q_D0obs_0_1[NyBins][3], Q_D0bkg_n1_1[NyBins][3], Q_D0bkg_0_1[NyBins][3];
   //D0 mass-fit method, no separation of obs and bkg
-  TComplex Q_D0_n1_1[NyBins][NmassBins], Q_D0_0_1[NyBins][NmassBins];
-  TComplex Q_D0bar_n1_1[NyBins][NmassBins], Q_D0bar_0_1[NyBins][NmassBins];
-  TComplex Q_D0all_n1_1[NyBins][NmassBins], Q_D0all_0_1[NyBins][NmassBins];
+  TComplex Q_D0_n1_1[NyBins][30], Q_D0_0_1[NyBins][30];
+  TComplex Q_D0bar_n1_1[NyBins][30], Q_D0bar_0_1[NyBins][30];
+  TComplex Q_D0all_n1_1[NyBins][30], Q_D0all_0_1[NyBins][30];
 
 
 
