@@ -225,6 +225,9 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       TH1D* c2_v1[20][2][3];
       TH1D* c2_trk_accept[20][2][3];
 
+      TH1D* c2_d0_v1[20][30][3][3];
+      TH1D* c2_d0_trk_accept[20][30][3][3];
+
       TH1D* c2_d0obs_v1[20][3][3];
       TH1D* c2_d0obs_trk_accept[20][3][3];
 
@@ -271,6 +274,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       std::vector<double> rapidityBins_;
       std::vector<double> ptBins_;
       std::vector<double> centBins_;
+      std::vector<double> massBins_;
 
       double D0MassHigh_;
       double D0MassLow_;

@@ -71,6 +71,7 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   rapidityBins_ = iConfig.getUntrackedParameter<std::vector<double>>("rapidityBins");
   ptBins_ = iConfig.getUntrackedParameter<std::vector<double>>("ptBins");
   centBins_ = iConfig.getUntrackedParameter<std::vector<double>>("centBins");
+  massBins_ = iConfig.getUntrackedParameter<std::vector<double>>("massBins");
 
   D0MassHigh_ = iConfig.getUntrackedParameter<double>("D0MassHigh", 1.92);
   D0MassLow_ = iConfig.getUntrackedParameter<double>("D0MassLow", 1.82);
@@ -215,6 +216,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   const int NetaBins = etaBins_.size() - 1;
   const int NyBins = rapidityBins_.size() - 1;
+  const int NmassBins = massBins_.size() - 1;
 
   TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus, Q_n3_1_HFplusANDminus, Q_0_1_HFplusANDminus;
   //HF towers loop to fill the towers' Q-vectors:
@@ -223,6 +225,10 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
   //D0 Q-vectors for both obs and bkg
   TComplex Q_D0obs_n1_1[NyBins][3], Q_D0obs_0_1[NyBins][3], Q_D0bkg_n1_1[NyBins][3], Q_D0bkg_0_1[NyBins][3];
+  //D0 mass-fit method, no separation of obs and bkg
+  TComplex Q_D0_n1_1[NyBins][NmassBins][3], Q_D0_0_1[NyBins][NmassBins][3];
+
+
 
   for(unsigned i = 0; i < towers->size(); ++i){
 
@@ -448,6 +454,32 @@ D0 candiates' loop
       double weight_D0 = 1.0;
 
       for(int rap = 0; rap < NyBins; rap++){
+        for(int imass = 0; imass < NmassBins; imass++){
+          if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] && mass > massBins_[imass] && mass < massBins_[imass+1]){
+
+          //signal+bkg region altogether
+          //D0
+            if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
+              
+              Q_D0_n1_1[rap][imass][0] += q_vector(+1, 1, weight_D0, phi);
+              Q_D0_0_1[rap][imass][0] += q_vector(0, 1, weight_D0, phi);
+            }
+          //D0bar
+            if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 ){
+
+              Q_D0_n1_1[rap][imass][1] += q_vector(+1, 1, weight_D0, phi);
+              Q_D0_0_1[rap][imass][1] += q_vector(0, 1, weight_D0, phi);
+            }
+          //inclusive D0
+  
+            Q_D0_n1_1[rap][imass][2] += q_vector(+1, 1, weight_D0, phi);
+            Q_D0_0_1[rap][imass][2] += q_vector(0, 1, weight_D0, phi);
+            
+          }
+        }
+      }
+
+      for(int rap = 0; rap < NyBins; rap++){
         if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] ){
 
         //Fill mass in each y
@@ -649,6 +681,42 @@ event average v1
     }
   }
 
+  //numerator D0 mass-fit method
+  for(int rap = 0; rap < NyBins; rap++){
+    for(int imass = 0; imass < NmassBins; imass++){
+      for(int charge = 0; charge < 3; charge++){
+        
+        //obs:
+        TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP, N_v1_AB_SP, D_v1_AB_SP;
+
+        N_v1_A_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFminus;
+        D_v1_A_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFminus;
+
+        double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
+
+        N_v1_B_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFplus;
+        D_v1_B_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFplus;
+
+        double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
+       
+        //use one plane
+        N_v1_AB_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFplusANDminus;
+        D_v1_AB_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFplusANDminus;
+
+        double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
+
+        c2_d0_v1[rap][imass][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
+        c2_d0_v1[rap][imass][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
+        c2_d0_v1[rap][imass][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
+
+        c2_d0_trk_accept[rap][imass][charge][0]->Fill(Q_D0_n1_1[rap][imass][charge].Re()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
+        c2_d0_trk_accept[rap][imass][charge][1]->Fill(Q_D0_n1_1[rap][imass][charge].Im()/Q_D0_0_1[rap][imass][charge].Re(), Q_D0_0_1[rap][imass][charge].Re());
+        
+      }
+    }
+  }
+
+
 }
 // ------------ method called once each job just before starting event loop  ------------
 void 
@@ -660,6 +728,7 @@ D0DirectedFlowCorrelator::beginJob()
 
   const int NetaBins = etaBins_.size() - 1 ;
   const int NyBins = rapidityBins_.size() - 1;
+  const int NmassBins = massBins_.size() - 1;
 
   double ptBinsArray[100];
   const int Nptbins = ptBins_.size() - 1;
@@ -725,6 +794,19 @@ D0DirectedFlowCorrelator::beginJob()
         c2_d0bkg_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
         c2_d0bkg_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
 
+      }
+    }
+  }
+
+  for(int rap = 0; rap < NyBins; rap++){
+    for(int imass = 0; imass < NmassBins; imass++){
+      for(int charge = 0; charge < 3; charge++){
+        for(int dir = 0; dir < 3; dir++){
+
+          c2_d0_v1[rap][imass][charge][dir] = fs->make<TH1D>(Form("c2_d0_v1_%d_%d_%d_%d",rap,imass,charge,dir),";c1", 1,-1,1);
+          c2_d0_trk_accept[rap][imass][charge][dir] = fs->make<TH1D>(Form("c2_d0_trk_accept_%d_%d_%d_%d",rap,imass,charge,dir), ";c1", 1,-1,1);
+          
+        }
       }
     }
   }
