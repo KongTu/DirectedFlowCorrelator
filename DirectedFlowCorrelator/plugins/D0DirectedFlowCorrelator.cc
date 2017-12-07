@@ -230,6 +230,8 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
 
   TComplex Q_D0_0_1[NyBins][NmassBins][3];
 
+  TComplex Q_D0_n1_1111[NyBins][3];
+
 
 
   for(unsigned i = 0; i < towers->size(); ++i){
