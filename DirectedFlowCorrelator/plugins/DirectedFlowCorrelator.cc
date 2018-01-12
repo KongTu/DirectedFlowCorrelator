@@ -42,7 +42,8 @@ DirectedFlowCorrelator::DirectedFlowCorrelator(const edm::ParameterSet& iConfig)
   useEtaGap_ = iConfig.getUntrackedParameter<bool>("useEtaGap");
   doBothSide_ = iConfig.getUntrackedParameter<bool>("doBothSide");
   doPixelReco_ = iConfig.getUntrackedParameter<bool>("doPixelReco");
-
+  doRapidityBin_ = iConfig.getUntrackedParameter<bool>("doRapidityBin", true);
+  
   eff_ = iConfig.getUntrackedParameter<int>("eff");
 
   etaTracker_ = iConfig.getUntrackedParameter<double>("etaTracker");
@@ -61,6 +62,7 @@ DirectedFlowCorrelator::DirectedFlowCorrelator(const edm::ParameterSet& iConfig)
   offlineDCA_ = iConfig.getUntrackedParameter<double>("offlineDCA", 0.0);
   offlineChi2_ = iConfig.getUntrackedParameter<double>("offlineChi2", 0.0);
   offlinenhits_ = iConfig.getUntrackedParameter<double>("offlinenhits", 0.0);
+
 
   etaBins_ = iConfig.getUntrackedParameter<std::vector<double>>("etaBins");
   ptBins_ = iConfig.getUntrackedParameter<std::vector<double>>("ptBins");
@@ -239,6 +241,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
     double phi = trk.phi();
     double trkEta = trk.eta();
+    double trkY = trk.rapidity(); 
 
     double weight = 1.0;
     if( doEffCorrection_ ) { 
@@ -273,8 +276,10 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
       Q_0_trk_plus += q_vector(0, 1, weight, phi);
     }
     
+    double temp_eta = trkEta;
     for(int eta = 0; eta < NetaBins; eta++){
-      if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
+      if( doRapidityBin_ ) temp_eta = trkY;
+      if( temp_eta > etaBins_[eta] && temp_eta < etaBins_[eta+1] ){
 
         if( trk.charge() == +1 ){//positive charge
 
