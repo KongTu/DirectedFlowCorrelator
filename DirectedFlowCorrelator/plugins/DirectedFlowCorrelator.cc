@@ -241,7 +241,7 @@ DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetup&
     double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
     double phi = trk.phi();
     double trkEta = trk.eta();
-    double trkY = trk.rapidity(); 
+    double trkY = trk.y(); 
 
     double weight = 1.0;
     if( doEffCorrection_ ) { 
