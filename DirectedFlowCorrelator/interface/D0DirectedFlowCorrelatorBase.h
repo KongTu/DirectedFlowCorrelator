@@ -191,6 +191,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
 
       //correction table
       TH2D* effTable[5];
+      TH1D* d0EffTable[3];
 
       TH1D* Ntrk;
       TH1D* vtxZ;
@@ -265,6 +266,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
 
       bool useCentrality_;
       bool doEffCorrection_;
+      bool doD0EffCorrection_;
       bool useEtaGap_;
       bool doBothSide_;
       bool doPixelReco_;

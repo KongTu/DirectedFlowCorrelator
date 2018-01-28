@@ -43,6 +43,7 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
 
   useCentrality_ = iConfig.getUntrackedParameter<bool>("useCentrality");
   doEffCorrection_ = iConfig.getUntrackedParameter<bool>("doEffCorrection");
+  doD0EffCorrection_ = iConfig.getUntrackedParameter<bool>("doD0EffCorrection");
   useEtaGap_ = iConfig.getUntrackedParameter<bool>("useEtaGap");
   doBothSide_ = iConfig.getUntrackedParameter<bool>("doBothSide");
   doPixelReco_ = iConfig.getUntrackedParameter<bool>("doPixelReco");
@@ -455,6 +456,16 @@ D0 candiates' loop
         for(int imass = 0; imass < NmassBins; imass++){
           if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] && mass > massBins_[imass] && mass < massBins_[imass+1]){
 
+            if( doD0EffCorrection_ ){
+
+               int index = 0;
+               if( rap == 0 || rap == 5 ) index = 2;
+               if( rap == 1 || rap == 4 ) index = 1;
+               if( rap == 2 || rap == 3 ) index = 0;
+              
+               weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
+               weight_D0 = 1.0/weight_D0;
+            }
           //signal+bkg region altogether
           //D0
             if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
@@ -749,6 +760,13 @@ D0DirectedFlowCorrelator::beginJob()
     effTable[2] = (TH2D*)f3.Get("rTotalEff3D_10_30");
     effTable[3] = (TH2D*)f3.Get("rTotalEff3D_5_10");
     effTable[4] = (TH2D*)f3.Get("rTotalEff3D_0_5");
+
+    edm::FileInPath fip4("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table.root");
+    TFile f4(fip4.fullPath().c_str(),"READ");
+
+    d0EffTable[0] = (TH1D*)f4.Get("hist_D0_eff_1");
+    d0EffTable[1] = (TH1D*)f4.Get("hist_D0_eff_2");
+    d0EffTable[2] = (TH1D*)f4.Get("hist_D0_eff_3");
   }
   else{
     edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
