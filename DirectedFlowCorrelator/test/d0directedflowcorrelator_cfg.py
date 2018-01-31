@@ -49,14 +49,14 @@ process.source = cms.Source("PoolSource",
 #'/store/hidata/HIRun2015/HIMinimumBias5/AOD/02May2016-v1/00000/00C836AF-0730-E611-A227-F01FAFD8F9BA.root'
 #'file:/afs/cern.ch/work/z/ztu/CDDF/CMSSW_7_5_8_patch3/src/GenerateMassTree/DataTree/D0PbPb/pPb_HM_10.root'
 #'file:PbPb_MB_101.root'
-'file:PbPb_MB_1.root'
+'file:/afs/cern.ch/work/z/ztu/public/forBen/PbPb_MB_1.root'
 ),
 
     secondaryFileNames = cms.untracked.vstring(
 #'file:/afs/cern.ch/work/z/ztu/CDDF/CMSSW_7_5_8_patch3/src/GenerateMassTree/DataTree/D0PbPb/7A18BA88-7E91-E611-8582-0025901ACB5A.root'
 #'file:6460B262-3DA7-E511-95FF-02163E014397.root'
-'file:4EB647DE-5FA7-E511-9424-02163E013439.root',	
-'file:00A973C7-5FA7-E511-9950-02163E014451.root'	
+'file:/afs/cern.ch/work/z/ztu/public/forBen/4EB647DE-5FA7-E511-9424-02163E013439.root',	
+'file:/afs/cern.ch/work/z/ztu/public/forBen/00A973C7-5FA7-E511-9950-02163E014451.root'	
 	)	
 )
 
