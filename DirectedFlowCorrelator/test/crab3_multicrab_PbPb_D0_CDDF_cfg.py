@@ -6,7 +6,7 @@ import FWCore.ParameterSet.Config as cms
 process = cms.Process('Demo')
 process.load("DirectedFlowCorrelator.DirectedFlowCorrelator.d0directedflowcorrelator_cfi")
 
-outputName = "multicrab_D0_CDDF_v11_loose_HI_PeriDatasets"
+outputName = "multicrab_D0_CDDF_v12_eff_HI"
 
 config.General.transferOutputs = True
 config.General.transferLogs = True
@@ -44,27 +44,27 @@ if __name__ == '__main__':
    
 
    for num in range(0,4):
-	"""
+	
         RequestName = outputName + "Golden_MB_" + str(num+1)
         DataSetName = '/HIMinimumBias' + str(num+1) + '/davidlw-RecoSkim2015_D0_hireco_Golden_MB_tight_v2-51b0d5d038f3f98617a2426a9749f15c/USER'
         config.General.requestName = RequestName
         config.Data.inputDataset = DataSetName
         submit(config)
-        """
+        
      
    for num in range(0,11):
 	
-	"""
+	
         RequestName = outputName + "TrackerOnly_MB_" + str(num+1)
         DataSetName = '/HIMinimumBias' + str(num+1) + '/davidlw-RecoSkim2015_D0_hireco_TrackerOnly_MB_v2-51b0d5d038f3f98617a2426a9749f15c/USER'
         config.General.requestName = RequestName
         config.Data.inputDataset = DataSetName
         submit(config)
-	"""
+	
 
    for num in range(0,1):
 
-	"""
+	
 	RequestName = outputName + "TrackerOnly_DoubleMu_0"
         DataSetName = '/HIOniaL1DoubleMu0/davidlw-RecoSkim2015_D0_hireco_TrackerOnly_MB_v2-51b0d5d038f3f98617a2426a9749f15c/USER'
         config.General.requestName = RequestName
@@ -91,7 +91,7 @@ if __name__ == '__main__':
 
 	#print 'double check the q2 cut is from %r to %r' % (q2Range[num], q2Range[num+1])
 	#print 'double check the Ntrk cut is from %r to %r' % (ntrkRange[num], ntrkRange[num+1])  	
-	"""
+	
 
 	RequestName = outputName + "Golden_MB5_" + str(num)
         DataSetName = '/HIMinimumBias5/davidlw-RecoSkim2015_D0_hireco_Golden_v1-0994449c32ecc197ef90c1037e0ac608/USER'
