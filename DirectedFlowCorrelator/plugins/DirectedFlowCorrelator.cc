@@ -395,7 +395,7 @@ DirectedFlowCorrelator::beginJob()
   }
 
   if( !doPixelReco_ ){
-    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_ppReco_v5_loose.root");
+    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_ppReco_v6_wide.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     for(int i = 0; i < 5; i++){
        effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
