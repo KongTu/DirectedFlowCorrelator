@@ -377,74 +377,6 @@ event average v1
     }
   }
 
-//
-// /*
-// EbyE analysis, in progress.
-// */
-//   TComplex N_1_SP, D_1_SP, N_2_SP, D_2_SP, N_3_SP, D_3_SP;
-
-//   N_1_SP = Q_n3_1_HFminus*Q_n3_trk_plus;
-//   D_1_SP = Q_0_1_HFminus*Q_0_trk_plus;
-
-//   N_2_SP = Q_n3_1_HFplus*Q_n3_trk_plus;
-//   D_2_SP = Q_0_1_HFplus*Q_0_trk_plus;
-
-//   N_3_SP = Q_n3_1_HFplus*TComplex::Conjugate(Q_n3_1_HFminus);
-//   D_3_SP = Q_0_1_HFplus*Q_0_1_HFminus;
-
-//   double t1 = N_1_SP.Re()/D_1_SP.Re();
-//   double t2 = N_2_SP.Re()/D_2_SP.Re();
-//   double t3 = N_3_SP.Re()/D_3_SP.Re();
-
-//   double Res_A = sqrt(t1*t3/t2);
-//   double Res_B = sqrt(t2*t3/t1);
-
-//   double v1[NetaBins][2];//EbyE v1 in different eta slices and charge
-
-//   for(int eta = 0; eta < NetaBins; eta++){
-//     for(int charge = 0; charge < 2; charge++){
-
-//       TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
-
-//       N_v1_A_SP = Q_n1_1[eta][charge]*Q_n3_1_HFminus;
-//       D_v1_A_SP = Q_0_1[eta][charge]*Q_0_1_HFminus;
-
-//       double V1_A = N_v1_A_SP.Re()/D_v1_A_SP.Re();
-
-//       N_v1_B_SP = Q_n1_1[eta][charge]*Q_n3_1_HFplus;
-//       D_v1_B_SP = Q_0_1[eta][charge]*Q_0_1_HFplus;
-
-//       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
-
-//       v1[eta][charge] = (V1_A/Res_A + V1_B/Res_B)/2.0;
-//     }
-//   }
-
-//   //EbyE v1 is calculated for different eta and charge
-//   //Now calculate the A correlator. 
-
-//   for(int eta = 0; eta < NetaBins/2; eta++){
-
-//     double A_1_pm_YY = v1[eta][0] - v1[eta][1];
-//     double A_1_pm_YmY = v1[eta][0] - v1[NetaBins-eta-1][1];
-
-//     double A_1_pp_YmY = v1[eta][0] - v1[NetaBins-eta-1][0];
-//     double A_1_mm_YmY = v1[eta][1] - v1[NetaBins-eta-1][1];
-
-//     double C_1 = A_1_pm_YY*A_1_pm_YY;
-//     C_1_YY[eta]->Fill(C_1, Q_0_1[eta][0]);
-
-//     double C_1_1 = A_1_pm_YmY*A_1_pm_YmY;
-//     C_1_YmY[eta]->Fill(C_1_1, Q_0_1[eta][0]);
-
-//     double C_2 = (v1[eta][0]+v1[NetaBins-eta-1][1])*(v1[eta][0]+v1[NetaBins-eta-1][1]);
-//     C_2_YmY[eta]->Fill(C_2, Q_0_1[eta][0]);
-
-//     double C_3 = A_1_pp_YmY*A_1_mm_YmY;
-//     C_3_YmY[eta]->Fill(C_3, Q_0_1[eta][0]);
-
-//   }  
-
 }
 // ------------ method called once each job just before starting event loop  ------------
 void 
@@ -463,7 +395,7 @@ DirectedFlowCorrelator::beginJob()
   }
 
   if( !doPixelReco_ ){
-    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_eff_mult_v1.root");
+    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_ppReco_v5_tight.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     for(int i = 0; i < 5; i++){
        effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
