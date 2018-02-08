@@ -278,7 +278,7 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     double phi = trk.phi();
     double trkEta = trk.eta();
 
-    double weight = 1.0;
+    double weight = 400.0;
     // if( doEffCorrection_ ) { 
     //   weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
     // }
@@ -298,27 +298,9 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
 
-    if( doD0EffCorrection_ ){
-
-       int index = 0;
-
-       weight = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(trk.pt()));
-       if(weight < 0.0000001){
-        weight = 1.0;
-       }
-       else{
-        weight = 1.0/weight;
-       }
-    }
-    cout << "pt " << trk.pt() << endl;
-    cout << "weight " << weight << endl;
-
     trkPhi->Fill(phi, weight);
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
-
-
-
 
     if( trkEta < -1.0 && trkEta > -2.4 ){
    
