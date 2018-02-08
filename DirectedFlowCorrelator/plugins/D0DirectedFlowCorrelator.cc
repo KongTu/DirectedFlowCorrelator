@@ -279,8 +279,20 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     double trkEta = trk.eta();
 
     double weight = 1.0;
-    if( doEffCorrection_ ) { 
-      weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
+    // if( doEffCorrection_ ) { 
+    //   weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
+    // }
+    if( doD0EffCorrection_ ){
+
+       int index = 0;
+
+       weight = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(trk.pt()));
+       if(weight < 0.0000001){
+        weight = 1.0;
+       }
+       else{
+        weight = 1.0/weight;
+       }
     }
 
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
