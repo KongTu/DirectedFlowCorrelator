@@ -279,9 +279,9 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     double trkEta = trk.eta();
 
     double weight = 1.0;
-    // if( doEffCorrection_ ) { 
-    //   weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
-    // }
+    if( doEffCorrection_ ) { 
+      weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
+    }
     
 
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
@@ -297,19 +297,6 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
-
-    if( doD0EffCorrection_ ){
-
-       int index = 0;
-
-       weight = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(trk.pt()));
-       if(weight < 0.0000001){
-        weight = 1.0;
-       }
-       else{
-        weight = 1.0/weight;
-       }
-    }
 
     trkPhi->Fill(phi, weight);
     trkPt->Fill(trk.pt(), weight);
@@ -811,8 +798,8 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 2; charge++){
       for(int dir = 0; dir < 3; dir++){
 
-        c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 100,-1,1);
-        c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 100,-1,1);
+        c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
+        c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 1,-1,1);
 
       }
     }
