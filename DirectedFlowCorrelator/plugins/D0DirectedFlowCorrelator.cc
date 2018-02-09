@@ -361,42 +361,42 @@ D0 candiates' loop
     for(unsigned it=0; it<D0->size(); ++it) {
         
       const reco::VertexCompositeCandidate & trk = (*D0)[it];
-      double secvz = -999.9, secvx = -999.9, secvy = -999.9;
-      secvz = trk.vz();
-      secvx = trk.vx();
-      secvy = trk.vy();
-      double px = trk.px();
-      double py = trk.py();
-      double pz = trk.pz();
-      TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-      TVector3 secvec(px,py,pz);
+      // double secvz = -999.9, secvx = -999.9, secvy = -999.9;
+      // secvz = trk.vz();
+      // secvx = trk.vx();
+      // secvy = trk.vy();
+      // double px = trk.px();
+      // double py = trk.py();
+      // double pz = trk.pz();
+      // TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+      // TVector3 secvec(px,py,pz);
 
-      //vtxChi2
-      double vtxChi2 = trk.vertexChi2();
-      double ndf = trk.vertexNdof();
-      double VtxProb = TMath::Prob(vtxChi2,ndf);
+      // //vtxChi2
+      // double vtxChi2 = trk.vertexChi2();
+      // double ndf = trk.vertexNdof();
+      // double VtxProb = TMath::Prob(vtxChi2,ndf);
 
-      //PAngle
-      double agl_abs = secvec.Angle(ptosvec);
+      // //PAngle
+      // double agl_abs = secvec.Angle(ptosvec);
 
-      //Decay length 3D
-      typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
-      typedef ROOT::Math::SVector<double, 3> SVector3;
-      typedef ROOT::Math::SVector<double, 6> SVector6;
+      // //Decay length 3D
+      // typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+      // typedef ROOT::Math::SVector<double, 3> SVector3;
+      // typedef ROOT::Math::SVector<double, 6> SVector6;
 
-      SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
-      SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+      // SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
+      // SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
 
-      double dl = ROOT::Math::Mag(distanceVector);
-      double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;        
-      double dlos = dl/dlerror;
-      double d0dca = dl*sin(agl_abs);
+      // double dl = ROOT::Math::Mag(distanceVector);
+      // double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;        
+      // double dlos = dl/dlerror;
+      // double d0dca = dl*sin(agl_abs);
 
       double y_D0 = trk.rapidity();
-      double pt = trk.pt();
+      //double pt = trk.pt();
       double phi = trk.phi();
       double mass = trk.mass();
-      double eta = trk.eta();
+      // double eta = trk.eta();
 
       // if (pt < D0PtLow_) continue;
       // if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
@@ -412,41 +412,41 @@ D0 candiates' loop
       // if (agl_abs > D03DAngleHigh_[rap_index]) continue;
       // if (dlos < D0DlosLow_[rap_index]) continue;
 
-      const reco::Candidate * d1 = trk.daughter(0);
-      const reco::Candidate * d2 = trk.daughter(1);
+      // const reco::Candidate * d1 = trk.daughter(0);
+      // const reco::Candidate * d2 = trk.daughter(1);
               
-      auto dau1 = d1->get<reco::TrackRef>();
-      auto dau2 = d2->get<reco::TrackRef>();
+      // auto dau1 = d1->get<reco::TrackRef>();
+      // auto dau2 = d2->get<reco::TrackRef>();
 
-      //trk quality       
-      bool trkquality1 = dau1->quality(reco::TrackBase::highPurity);
-      bool trkquality2 = dau2->quality(reco::TrackBase::highPurity);
-      //track pt
-      double pt1 = d1->pt();
-      double pt2 = d2->pt();
-      //track eta
-      double eta1 = d1->eta();
-      double eta2 = d2->eta();
-      //track charge
+      // //trk quality       
+      // bool trkquality1 = dau1->quality(reco::TrackBase::highPurity);
+      // bool trkquality2 = dau2->quality(reco::TrackBase::highPurity);
+      // //track pt
+      // double pt1 = d1->pt();
+      // double pt2 = d2->pt();
+      // //track eta
+      // double eta1 = d1->eta();
+      // double eta2 = d2->eta();
+      // //track charge
       int charge1 = d1->charge();
       int charge2 = d2->charge();
-      //mass
+      // //mass
       double mass1 = d1->mass();
       double mass2 = d2->mass();
-      //track pT error
-      double ptErr1 = dau1->ptError();
-      double ptErr2 = dau2->ptError();
-      //trkNHits
-      int nhit1 = dau1->numberOfValidHits();
-      int nhit2 = dau2->numberOfValidHits();
+      // //track pT error
+      // double ptErr1 = dau1->ptError();
+      // double ptErr2 = dau2->ptError();
+      // //trkNHits
+      // int nhit1 = dau1->numberOfValidHits();
+      // int nhit2 = dau2->numberOfValidHits();
 
-      //track nlayer
-      double nlayer1 = dau1->hitPattern().trackerLayersWithMeasurement();
-      double nlayer2 = dau2->hitPattern().trackerLayersWithMeasurement();
+      // //track nlayer
+      // double nlayer1 = dau1->hitPattern().trackerLayersWithMeasurement();
+      // double nlayer2 = dau2->hitPattern().trackerLayersWithMeasurement();
 
-      //track Chi2
-      double trkChi1 = dau1->normalizedChi2();
-      double trkChi2 = dau2->normalizedChi2();
+      // //track Chi2
+      // double trkChi1 = dau1->normalizedChi2();
+      // double trkChi2 = dau2->normalizedChi2();
 
       // if (trkChi1/nlayer1 > TrkChiOverNLayerHigh_) continue;
       // if (trkChi2/nlayer2 > TrkChiOverNLayerHigh_) continue;
