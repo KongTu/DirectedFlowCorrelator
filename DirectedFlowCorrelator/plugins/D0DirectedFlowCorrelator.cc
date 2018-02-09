@@ -474,10 +474,10 @@ D0 candiates' loop
 
             if( doD0EffCorrection_ ){
 
-               int index = 0;
-               if( rap == 0 || rap == 5 ) index = 2;
-               if( rap == 1 || rap == 4 ) index = 1;
-               if( rap == 2 || rap == 3 ) index = 0;
+               // int index = 0;
+               // if( rap == 0 || rap == 5 ) index = 2;
+               // if( rap == 1 || rap == 4 ) index = 1;
+               // if( rap == 2 || rap == 3 ) index = 0;
               
                 TF1* f1 = new TF1("f1","[0]*TMath::Exp([1]*x)+[3]*x+[4]*x*x");
                 f1->SetParameter(0,-3.01782e-02);
