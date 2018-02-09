@@ -283,15 +283,22 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
       weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
     }
 
-    TF1* f1 = new TF1("f1","-0.125282+0.0484861*x+-0.00092044*x*x",2,30);
-    if( trk.pt() > 3.0 && trk.pt() < 30.0 ){
-      weight = 1.0/(f1->Eval(trk.pt()));
+    // TF1* f1 = new TF1("f1","-0.125282+0.0484861*x+-0.00092044*x*x",2,30);
+    // if( trk.pt() > 3.0 && trk.pt() < 30.0 ){
+    //   weight = 1.0/(f1->Eval(trk.pt()));
+    // }
+    // else{
+    //   weight = 1.0;
+    // }
+
+    weight = d0EffTable[0]->GetBinContent(d0EffTable[0]->FindBin(trk.pt()));
+    if(weight < 0.0000001){
+    weight = 1.0;
     }
     else{
-      weight = 1.0;
+    weight = 1.0/weight;
     }
     
-
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
     if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
     if(fabs(dzvtx/dzerror) > offlineDCA_) continue;
