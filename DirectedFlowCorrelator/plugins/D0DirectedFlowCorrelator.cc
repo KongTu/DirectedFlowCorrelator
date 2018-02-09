@@ -466,8 +466,11 @@ D0 candiates' loop
                 if( pt > 3.0 && pt < 30.0 ){
                   weight_D0 = 1.0/(f1[index]->Eval(trk.pt()));
                 }
-                else{
+                else if(pt < 3.0){
                   weight_D0 = 1.0/(f1[index]->Eval(3.0));
+                }
+                else if(pt > 30.0){
+                  weight_D0 = 1.0/(f1[index]->Eval(30.0));
                 }
             }
           //signal+bkg region altogether
