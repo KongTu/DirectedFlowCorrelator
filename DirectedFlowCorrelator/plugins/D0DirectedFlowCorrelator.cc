@@ -291,13 +291,13 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     //   weight = 1.0;
     // }
 
-    weight = d0EffTable[0]->GetBinContent(d0EffTable[0]->FindBin(trk.pt()));
-    if(weight < 0.0000001){
-    weight = 1.0;
-    }
-    else{
-    weight = 1.0/weight;
-    }
+    // weight = d0EffTable[0]->GetBinContent(d0EffTable[0]->FindBin(trk.pt()));
+    // if(weight < 0.0000001){
+    // weight = 1.0;
+    // }
+    // else{
+    // weight = 1.0/weight;
+    // }
     
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
     if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
@@ -813,8 +813,8 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 2; charge++){
       for(int dir = 0; dir < 3; dir++){
 
-        c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 100,-1,1);
-        c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 100,-1,1);
+        c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
+        c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 1,-1,1);
 
       }
     }
