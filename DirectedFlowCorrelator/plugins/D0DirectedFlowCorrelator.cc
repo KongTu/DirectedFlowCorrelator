@@ -824,11 +824,11 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 3; charge++){
       for(int dir = 0; dir < 3; dir++){
 
-        c2_d0obs_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
-        c2_d0obs_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
+        c2_d0obs_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_v1_%d_%d_%d",rap,charge,dir),";c1", 100,-1,1);
+        c2_d0obs_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 100,-1,1);
         
-        c2_d0bkg_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
-        c2_d0bkg_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
+        c2_d0bkg_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_v1_%d_%d_%d",rap,charge,dir),";c1", 100,-1,1);
+        c2_d0bkg_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 100,-1,1);
 
       }
     }
