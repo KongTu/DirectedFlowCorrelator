@@ -401,11 +401,11 @@ D0 candiates' loop
       // if (pt < D0PtLow_) continue;
       // if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
       
-      int rap_index = 0;
+      //int rap_index = 0;
 
-      if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
-      if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
-      if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
+      // if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
+      // if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
+      // if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
 
       // if (d0dca > D0DcaHigh_[rap_index]) continue;
       // if (VtxProb < D0VtxProbLow_[rap_index]) continue;
