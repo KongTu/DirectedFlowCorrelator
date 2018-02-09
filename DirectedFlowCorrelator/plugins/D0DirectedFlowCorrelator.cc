@@ -479,9 +479,16 @@ D0 candiates' loop
                if( rap == 1 || rap == 4 ) index = 1;
                if( rap == 2 || rap == 3 ) index = 0;
               
+              // TF1* f1 = new TF1("f1","-0.125282+0.0484861*x+-0.00092044*x*x",2,30);
+              // if( pt > 3.0 && pt < 30.0 ){
+              //   weight_D0 = 1.0/(f1->Eval(trk.pt()));
+              // }
+              // else{
+              //   weight_D0 = 50.0;
+              // }
                weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
                if(pt < 3.0 || pt > 30.0){
-                weight_D0 = 50.0;
+                weight_D0 = 1.0;
                }
                else{
                 weight_D0 = 1.0/weight_D0;
