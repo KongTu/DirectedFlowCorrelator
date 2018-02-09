@@ -479,20 +479,26 @@ D0 candiates' loop
                if( rap == 1 || rap == 4 ) index = 1;
                if( rap == 2 || rap == 3 ) index = 0;
               
-              // TF1* f1 = new TF1("f1","-0.125282+0.0484861*x+-0.00092044*x*x",2,30);
-              // if( pt > 3.0 && pt < 30.0 ){
-              //   weight_D0 = 1.0/(f1->Eval(trk.pt()));
-              // }
-              // else{
-              //   weight_D0 = 50.0;
-              // }
-               weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
-               if(pt < 3.0 || pt > 30.0){
-                weight_D0 = 1.0;
-               }
-               else{
-                weight_D0 = 1.0/weight_D0;
-               }
+                TF1* f1 = new TF1("f1","[0]*TMath::Exp([1]*x)+[3]*x+[4]*x*x");
+                f1->SetParameter(0,-3.01782e-02);
+                f1->SetParameter(1,2.93688e-01);
+                f1->SetParameter(2,-5.67500e+04);
+                f1->SetParameter(3,5.03200e-03);
+                f1->SetParameter(4,7.43605e-03);
+
+                if( pt > 3.0 && pt < 30.0 ){
+                  weight_D0 = 1.0/(f1->Eval(trk.pt()));
+                }
+                else{
+                  weight_D0 = 1.0/(f1->Eval(3.0));
+                }
+               //weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
+               // if(pt < 3.0 || pt > 30.0){
+               //  weight_D0 = 1.0;
+               // }
+               // else{
+               //  weight_D0 = 1.0/weight_D0;
+               // }
             }
           //signal+bkg region altogether
           //D0
