@@ -393,7 +393,7 @@ D0 candiates' loop
       // double d0dca = dl*sin(agl_abs);
 
       double y_D0 = trk.rapidity();
-      //double pt = trk.pt();
+      double pt = trk.pt();
       double phi = trk.phi();
       double mass = trk.mass();
       // double eta = trk.eta();
@@ -412,11 +412,11 @@ D0 candiates' loop
       // if (agl_abs > D03DAngleHigh_[rap_index]) continue;
       // if (dlos < D0DlosLow_[rap_index]) continue;
 
-      // const reco::Candidate * d1 = trk.daughter(0);
-      // const reco::Candidate * d2 = trk.daughter(1);
+      const reco::Candidate * d1 = trk.daughter(0);
+      const reco::Candidate * d2 = trk.daughter(1);
               
-      // auto dau1 = d1->get<reco::TrackRef>();
-      // auto dau2 = d2->get<reco::TrackRef>();
+      auto dau1 = d1->get<reco::TrackRef>();
+      auto dau2 = d2->get<reco::TrackRef>();
 
       // //trk quality       
       // bool trkquality1 = dau1->quality(reco::TrackBase::highPurity);
