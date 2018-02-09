@@ -398,8 +398,8 @@ D0 candiates' loop
       double mass = trk.mass();
       double eta = trk.eta();
 
-      if (pt < D0PtLow_) continue;
-      if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
+      // if (pt < D0PtLow_) continue;
+      // if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
       
       int rap_index = 0;
 
@@ -407,10 +407,10 @@ D0 candiates' loop
       if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
       if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
 
-      if (d0dca > D0DcaHigh_[rap_index]) continue;
-      if (VtxProb < D0VtxProbLow_[rap_index]) continue;
-      if (agl_abs > D03DAngleHigh_[rap_index]) continue;
-      if (dlos < D0DlosLow_[rap_index]) continue;
+      // if (d0dca > D0DcaHigh_[rap_index]) continue;
+      // if (VtxProb < D0VtxProbLow_[rap_index]) continue;
+      // if (agl_abs > D03DAngleHigh_[rap_index]) continue;
+      // if (dlos < D0DlosLow_[rap_index]) continue;
 
       const reco::Candidate * d1 = trk.daughter(0);
       const reco::Candidate * d2 = trk.daughter(1);
@@ -448,23 +448,23 @@ D0 candiates' loop
       double trkChi1 = dau1->normalizedChi2();
       double trkChi2 = dau2->normalizedChi2();
 
-      if (trkChi1/nlayer1 > TrkChiOverNLayerHigh_) continue;
-      if (trkChi2/nlayer2 > TrkChiOverNLayerHigh_) continue;
+      // if (trkChi1/nlayer1 > TrkChiOverNLayerHigh_) continue;
+      // if (trkChi2/nlayer2 > TrkChiOverNLayerHigh_) continue;
 
-      if (!trkquality1) continue;
-      if (!trkquality2) continue;
+      // if (!trkquality1) continue;
+      // if (!trkquality2) continue;
 
-      if (pt1 < TrkPtLow_[rap_index]) continue;
-      if (pt2 < TrkPtLow_[rap_index]) continue;
+      // if (pt1 < TrkPtLow_[rap_index]) continue;
+      // if (pt2 < TrkPtLow_[rap_index]) continue;
 
-      if (eta1 < TrkEtaLow_ || eta1 > TrkEtaHigh_) continue;
-      if (eta2 < TrkEtaLow_ || eta2 > TrkEtaHigh_) continue;
+      // if (eta1 < TrkEtaLow_ || eta1 > TrkEtaHigh_) continue;
+      // if (eta2 < TrkEtaLow_ || eta2 > TrkEtaHigh_) continue;
 
-      if (ptErr1/pt1 > TrkPtErrOverPtHigh_) continue;
-      if (ptErr2/pt2 > TrkPtErrOverPtHigh_) continue;
+      // if (ptErr1/pt1 > TrkPtErrOverPtHigh_) continue;
+      // if (ptErr2/pt2 > TrkPtErrOverPtHigh_) continue;
 
-      if (nhit1 < TrkNHitLow_) continue;
-      if (nhit2 < TrkNHitLow_) continue;
+      // if (nhit1 < TrkNHitLow_) continue;
+      // if (nhit2 < TrkNHitLow_) continue;
 
       double weight_D0 = 1.0;
 
