@@ -282,22 +282,6 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
     if( doEffCorrection_ ) { 
       weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
     }
-
-    // TF1* f1 = new TF1("f1","-0.125282+0.0484861*x+-0.00092044*x*x",2,30);
-    // if( trk.pt() > 3.0 && trk.pt() < 30.0 ){
-    //   weight = 1.0/(f1->Eval(trk.pt()));
-    // }
-    // else{
-    //   weight = 1.0;
-    // }
-
-    // weight = d0EffTable[0]->GetBinContent(d0EffTable[0]->FindBin(trk.pt()));
-    // if(weight < 0.0000001){
-    // weight = 1.0;
-    // }
-    // else{
-    // weight = 1.0/weight;
-    // }
     
     if(!trk.quality(reco::TrackBase::highPurity)) continue;
     if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
@@ -361,56 +345,56 @@ D0 candiates' loop
     for(unsigned it=0; it<D0->size(); ++it) {
         
       const reco::VertexCompositeCandidate & trk = (*D0)[it];
-      // double secvz = -999.9, secvx = -999.9, secvy = -999.9;
-      // secvz = trk.vz();
-      // secvx = trk.vx();
-      // secvy = trk.vy();
-      // double px = trk.px();
-      // double py = trk.py();
-      // double pz = trk.pz();
-      // TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
-      // TVector3 secvec(px,py,pz);
+      double secvz = -999.9, secvx = -999.9, secvy = -999.9;
+      secvz = trk.vz();
+      secvx = trk.vx();
+      secvy = trk.vy();
+      double px = trk.px();
+      double py = trk.py();
+      double pz = trk.pz();
+      TVector3 ptosvec(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+      TVector3 secvec(px,py,pz);
 
-      // //vtxChi2
-      // double vtxChi2 = trk.vertexChi2();
-      // double ndf = trk.vertexNdof();
-      // double VtxProb = TMath::Prob(vtxChi2,ndf);
+      //vtxChi2
+      double vtxChi2 = trk.vertexChi2();
+      double ndf = trk.vertexNdof();
+      double VtxProb = TMath::Prob(vtxChi2,ndf);
 
-      // //PAngle
-      // double agl_abs = secvec.Angle(ptosvec);
+      //PAngle
+      double agl_abs = secvec.Angle(ptosvec);
 
-      // //Decay length 3D
-      // typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
-      // typedef ROOT::Math::SVector<double, 3> SVector3;
-      // typedef ROOT::Math::SVector<double, 6> SVector6;
+      //Decay length 3D
+      typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double, 3> > SMatrixSym3D;
+      typedef ROOT::Math::SVector<double, 3> SVector3;
+      typedef ROOT::Math::SVector<double, 6> SVector6;
 
-      // SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
-      // SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
+      SMatrixSym3D totalCov = vtx.covariance() + trk.vertexCovariance();
+      SVector3 distanceVector(secvx-bestvx,secvy-bestvy,secvz-bestvz);
 
-      // double dl = ROOT::Math::Mag(distanceVector);
-      // double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;        
-      // double dlos = dl/dlerror;
-      // double d0dca = dl*sin(agl_abs);
+      double dl = ROOT::Math::Mag(distanceVector);
+      double dlerror = sqrt(ROOT::Math::Similarity(totalCov, distanceVector))/dl;        
+      double dlos = dl/dlerror;
+      double d0dca = dl*sin(agl_abs);
 
       double y_D0 = trk.rapidity();
       double pt = trk.pt();
       double phi = trk.phi();
       double mass = trk.mass();
-      // double eta = trk.eta();
+      double eta = trk.eta();
 
-      // if (pt < D0PtLow_) continue;
-      // if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
+      if (pt < D0PtLow_) continue;
+      if (eta < D0EtaLow_ || eta > D0EtaHigh_) continue;
       
-      //int rap_index = 0;
+      int rap_index = 0;
 
-      // if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
-      // if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
-      // if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
+      if( fabs(y_D0) > 0.0 && fabs(y_D0) < 0.6 ){rap_index = 0;}
+      if( fabs(y_D0) > 0.6 && fabs(y_D0) < 1.2 ){rap_index = 1;}
+      if( fabs(y_D0) > 1.2 && fabs(y_D0) < 2.0 ){rap_index = 2;}
 
-      // if (d0dca > D0DcaHigh_[rap_index]) continue;
-      // if (VtxProb < D0VtxProbLow_[rap_index]) continue;
-      // if (agl_abs > D03DAngleHigh_[rap_index]) continue;
-      // if (dlos < D0DlosLow_[rap_index]) continue;
+      if (d0dca > D0DcaHigh_[rap_index]) continue;
+      if (VtxProb < D0VtxProbLow_[rap_index]) continue;
+      if (agl_abs > D03DAngleHigh_[rap_index]) continue;
+      if (dlos < D0DlosLow_[rap_index]) continue;
 
       const reco::Candidate * d1 = trk.daughter(0);
       const reco::Candidate * d2 = trk.daughter(1);
@@ -418,53 +402,53 @@ D0 candiates' loop
       auto dau1 = d1->get<reco::TrackRef>();
       auto dau2 = d2->get<reco::TrackRef>();
 
-      // //trk quality       
-      // bool trkquality1 = dau1->quality(reco::TrackBase::highPurity);
-      // bool trkquality2 = dau2->quality(reco::TrackBase::highPurity);
-      // //track pt
-      // double pt1 = d1->pt();
-      // double pt2 = d2->pt();
-      // //track eta
-      // double eta1 = d1->eta();
-      // double eta2 = d2->eta();
-      // //track charge
+      //trk quality       
+      bool trkquality1 = dau1->quality(reco::TrackBase::highPurity);
+      bool trkquality2 = dau2->quality(reco::TrackBase::highPurity);
+      //track pt
+      double pt1 = d1->pt();
+      double pt2 = d2->pt();
+      //track eta
+      double eta1 = d1->eta();
+      double eta2 = d2->eta();
+      //track charge
       int charge1 = d1->charge();
       int charge2 = d2->charge();
       // //mass
       double mass1 = d1->mass();
       double mass2 = d2->mass();
-      // //track pT error
-      // double ptErr1 = dau1->ptError();
-      // double ptErr2 = dau2->ptError();
-      // //trkNHits
-      // int nhit1 = dau1->numberOfValidHits();
-      // int nhit2 = dau2->numberOfValidHits();
+      //track pT error
+      double ptErr1 = dau1->ptError();
+      double ptErr2 = dau2->ptError();
+      //trkNHits
+      int nhit1 = dau1->numberOfValidHits();
+      int nhit2 = dau2->numberOfValidHits();
 
-      // //track nlayer
-      // double nlayer1 = dau1->hitPattern().trackerLayersWithMeasurement();
-      // double nlayer2 = dau2->hitPattern().trackerLayersWithMeasurement();
+      //track nlayer
+      double nlayer1 = dau1->hitPattern().trackerLayersWithMeasurement();
+      double nlayer2 = dau2->hitPattern().trackerLayersWithMeasurement();
 
-      // //track Chi2
-      // double trkChi1 = dau1->normalizedChi2();
-      // double trkChi2 = dau2->normalizedChi2();
+      //track Chi2
+      double trkChi1 = dau1->normalizedChi2();
+      double trkChi2 = dau2->normalizedChi2();
 
-      // if (trkChi1/nlayer1 > TrkChiOverNLayerHigh_) continue;
-      // if (trkChi2/nlayer2 > TrkChiOverNLayerHigh_) continue;
+      if (trkChi1/nlayer1 > TrkChiOverNLayerHigh_) continue;
+      if (trkChi2/nlayer2 > TrkChiOverNLayerHigh_) continue;
 
-      // if (!trkquality1) continue;
-      // if (!trkquality2) continue;
+      if (!trkquality1) continue;
+      if (!trkquality2) continue;
 
-      // if (pt1 < TrkPtLow_[rap_index]) continue;
-      // if (pt2 < TrkPtLow_[rap_index]) continue;
+      if (pt1 < TrkPtLow_[rap_index]) continue;
+      if (pt2 < TrkPtLow_[rap_index]) continue;
 
-      // if (eta1 < TrkEtaLow_ || eta1 > TrkEtaHigh_) continue;
-      // if (eta2 < TrkEtaLow_ || eta2 > TrkEtaHigh_) continue;
+      if (eta1 < TrkEtaLow_ || eta1 > TrkEtaHigh_) continue;
+      if (eta2 < TrkEtaLow_ || eta2 > TrkEtaHigh_) continue;
 
-      // if (ptErr1/pt1 > TrkPtErrOverPtHigh_) continue;
-      // if (ptErr2/pt2 > TrkPtErrOverPtHigh_) continue;
+      if (ptErr1/pt1 > TrkPtErrOverPtHigh_) continue;
+      if (ptErr2/pt2 > TrkPtErrOverPtHigh_) continue;
 
-      // if (nhit1 < TrkNHitLow_) continue;
-      // if (nhit2 < TrkNHitLow_) continue;
+      if (nhit1 < TrkNHitLow_) continue;
+      if (nhit2 < TrkNHitLow_) continue;
 
       double weight_D0 = 1.0;
 
@@ -474,31 +458,17 @@ D0 candiates' loop
 
             if( doD0EffCorrection_ ){
 
-               // int index = 0;
-               // if( rap == 0 || rap == 5 ) index = 2;
-               // if( rap == 1 || rap == 4 ) index = 1;
-               // if( rap == 2 || rap == 3 ) index = 0;
-              
-                TF1* f1 = new TF1("f1","[0]*TMath::Exp([1]*x)+[3]*x+[4]*x*x");
-                f1->SetParameter(0,-3.01782e-02);
-                f1->SetParameter(1,2.93688e-01);
-                f1->SetParameter(2,-5.67500e+04);
-                f1->SetParameter(3,5.03200e-03);
-                f1->SetParameter(4,7.43605e-03);
-
+               int index = 0;
+               if( rap == 0 || rap == 5 ) index = 2;
+               if( rap == 1 || rap == 4 ) index = 1;
+               if( rap == 2 || rap == 3 ) index = 0;
+  
                 if( pt > 3.0 && pt < 30.0 ){
-                  weight_D0 = 1.0/(f1->Eval(trk.pt()));
+                  weight_D0 = 1.0/(f1[index]->Eval(trk.pt()));
                 }
                 else{
-                  weight_D0 = 1.0/(f1->Eval(3.0));
+                  weight_D0 = 1.0/(f1[index]->Eval(3.0));
                 }
-               //weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
-               // if(pt < 3.0 || pt > 30.0){
-               //  weight_D0 = 1.0;
-               // }
-               // else{
-               //  weight_D0 = 1.0/weight_D0;
-               // }
             }
           //signal+bkg region altogether
           //D0
@@ -801,6 +771,11 @@ D0DirectedFlowCorrelator::beginJob()
     d0EffTable[0] = (TH1D*)f4.Get("hist_D0_eff_1");
     d0EffTable[1] = (TH1D*)f4.Get("hist_D0_eff_2");
     d0EffTable[2] = (TH1D*)f4.Get("hist_D0_eff_3");
+
+    f1[0] = (TF1*)f4.Get("f1");
+    f1[1] = (TF1*)f4.Get("f2");
+    f1[2] = (TF1*)f4.Get("f3");
+
   }
   else{
     edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
@@ -837,11 +812,11 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 3; charge++){
       for(int dir = 0; dir < 3; dir++){
 
-        c2_d0obs_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_v1_%d_%d_%d",rap,charge,dir),";c1", 100,-1,1);
-        c2_d0obs_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 100,-1,1);
+        c2_d0obs_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
+        c2_d0obs_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0obs_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
         
-        c2_d0bkg_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_v1_%d_%d_%d",rap,charge,dir),";c1", 100,-1,1);
-        c2_d0bkg_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 100,-1,1);
+        c2_d0bkg_v1[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_v1_%d_%d_%d",rap,charge,dir),";c1", 1,-1,1);
+        c2_d0bkg_trk_accept[rap][charge][dir] = fs->make<TH1D>(Form("c2_d0bkg_trk_accept_%d_%d_%d",rap,charge,dir), ";c1", 1,-1,1);
 
       }
     }
