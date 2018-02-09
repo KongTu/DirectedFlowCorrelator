@@ -481,7 +481,7 @@ D0 candiates' loop
               
                weight_D0 = d0EffTable[index]->GetBinContent(d0EffTable[index]->FindBin(pt));
                if(weight_D0 < 0.0000001){
-                weight_D0 = 1.0;
+                weight_D0 = 100.0;
                }
                else{
                 weight_D0 = 100.0;
