@@ -484,7 +484,7 @@ D0 candiates' loop
                 weight_D0 = 1.0;
                }
                else{
-                weight_D0 = 1.0/weight_D0;
+                weight_D0 = 100.0;
                }
             }
           //signal+bkg region altogether
