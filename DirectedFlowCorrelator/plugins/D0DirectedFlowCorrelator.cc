@@ -827,16 +827,16 @@ D0DirectedFlowCorrelator::beginJob()
     f2[1] = (TF1*)f5.Get("f2");
     f2[2] = (TF1*)f5.Get("f3");
 
-    edm::FileInPath fip6("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table_loose.root");
-    TFile f6(fip6.fullPath().c_str(),"READ");
+    edm::FileInPath fip7("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table_loose.root");
+    TFile f7(fip7.fullPath().c_str(),"READ");
 
-    d0EffTable_loose[0] = (TH1D*)f6.Get("hist_D0_eff_1");
-    d0EffTable_loose[1] = (TH1D*)f6.Get("hist_D0_eff_2");
-    d0EffTable_loose[2] = (TH1D*)f6.Get("hist_D0_eff_3");
+    d0EffTable_loose[0] = (TH1D*)f7.Get("hist_D0_eff_1");
+    d0EffTable_loose[1] = (TH1D*)f7.Get("hist_D0_eff_2");
+    d0EffTable_loose[2] = (TH1D*)f7.Get("hist_D0_eff_3");
 
-    f3[0] = (TF1*)f6.Get("f1");
-    f3[1] = (TF1*)f6.Get("f2");
-    f3[2] = (TF1*)f6.Get("f3");
+    f3[0] = (TF1*)f7.Get("f1");
+    f3[1] = (TF1*)f7.Get("f2");
+    f3[2] = (TF1*)f7.Get("f3");
 
   }
   else{
