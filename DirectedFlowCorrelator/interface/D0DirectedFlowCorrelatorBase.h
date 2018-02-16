@@ -196,7 +196,7 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       TH1D* d0EffTable_loose[3];
       TF1* f1[3];
       TF1* f2[3];
-      TF1* f3[3];
+      TF1* f33[3];
 
       TH1D* Ntrk;
       TH1D* vtxZ;

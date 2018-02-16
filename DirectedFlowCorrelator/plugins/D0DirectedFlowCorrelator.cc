@@ -500,13 +500,13 @@ D0 candiates' loop
                if( rap == 2 || rap == 3 ) index = 0;
   
                 if( pt > 3.0 && pt < 30.0 ){
-                  weight_D0 = 1.0/(f3[index]->Eval(trk.pt()));
+                  weight_D0 = 1.0/(f33[index]->Eval(trk.pt()));
                 }
                 else if(pt < 3.0){
-                  weight_D0 = 1.0/(f3[index]->Eval(3.0));
+                  weight_D0 = 1.0/(f33[index]->Eval(3.0));
                 }
                 else if(pt > 30.0){
-                  weight_D0 = 1.0/(f3[index]->Eval(30.0));
+                  weight_D0 = 1.0/(f33[index]->Eval(30.0));
                 }
             }
 
@@ -830,13 +830,13 @@ D0DirectedFlowCorrelator::beginJob()
     edm::FileInPath fip7("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table_loose.root");
     TFile f7(fip7.fullPath().c_str(),"READ");
 
-    // d0EffTable_loose[0] = (TH1D*)f7.Get("hist_D0_eff_1");
-    // d0EffTable_loose[1] = (TH1D*)f7.Get("hist_D0_eff_2");
-    // d0EffTable_loose[2] = (TH1D*)f7.Get("hist_D0_eff_3");
+    d0EffTable_loose[0] = (TH1D*)f7.Get("hist_D0_eff_1");
+    d0EffTable_loose[1] = (TH1D*)f7.Get("hist_D0_eff_2");
+    d0EffTable_loose[2] = (TH1D*)f7.Get("hist_D0_eff_3");
 
-    f3[0] = (TF1*)f7.Get("f1");
-    f3[1] = (TF1*)f7.Get("f2");
-    f3[2] = (TF1*)f7.Get("f3");
+    f33[0] = (TF1*)f7.Get("f1");
+    f33[1] = (TF1*)f7.Get("f2");
+    f33[2] = (TF1*)f7.Get("f3");
 
   }
   else{
