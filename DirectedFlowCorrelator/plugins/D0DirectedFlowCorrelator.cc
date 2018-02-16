@@ -48,6 +48,8 @@ D0DirectedFlowCorrelator::D0DirectedFlowCorrelator(const edm::ParameterSet& iCon
   doBothSide_ = iConfig.getUntrackedParameter<bool>("doBothSide");
   doPixelReco_ = iConfig.getUntrackedParameter<bool>("doPixelReco");
   doHiReco_ = iConfig.getUntrackedParameter<bool>("doHiReco");
+  doTight_ = iConfig.getUntrackedParameter<bool>("doTight");
+  doLoose_ = iConfig.getUntrackedParameter<bool>("doLoose");
 
   eff_ = iConfig.getUntrackedParameter<int>("eff");
 
@@ -456,7 +458,7 @@ D0 candiates' loop
         for(int imass = 0; imass < NmassBins; imass++){
           if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] && mass > massBins_[imass] && mass < massBins_[imass+1]){
 
-            if( doD0EffCorrection_ ){
+            if( doD0EffCorrection_ && !doTight_ && !doLoose_ ){
 
                int index = 0;
                if( rap == 0 || rap == 5 ) index = 2;
@@ -473,6 +475,41 @@ D0 candiates' loop
                   weight_D0 = 1.0/(f1[index]->Eval(30.0));
                 }
             }
+            if( doD0EffCorrection_ && doTight_ && !doLoose_ ){
+
+               int index = 0;
+               if( rap == 0 || rap == 5 ) index = 2;
+               if( rap == 1 || rap == 4 ) index = 1;
+               if( rap == 2 || rap == 3 ) index = 0;
+  
+                if( pt > 3.0 && pt < 30.0 ){
+                  weight_D0 = 1.0/(f2[index]->Eval(trk.pt()));
+                }
+                else if(pt < 3.0){
+                  weight_D0 = 1.0/(f2[index]->Eval(3.0));
+                }
+                else if(pt > 30.0){
+                  weight_D0 = 1.0/(f2[index]->Eval(30.0));
+                }
+            }
+            if( doD0EffCorrection_ && !doTight_ && doLoose_ ){
+
+               int index = 0;
+               if( rap == 0 || rap == 5 ) index = 2;
+               if( rap == 1 || rap == 4 ) index = 1;
+               if( rap == 2 || rap == 3 ) index = 0;
+  
+                if( pt > 3.0 && pt < 30.0 ){
+                  weight_D0 = 1.0/(f3[index]->Eval(trk.pt()));
+                }
+                else if(pt < 3.0){
+                  weight_D0 = 1.0/(f3[index]->Eval(3.0));
+                }
+                else if(pt > 30.0){
+                  weight_D0 = 1.0/(f3[index]->Eval(30.0));
+                }
+            }
+
           //signal+bkg region altogether
           //D0
             if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
@@ -778,6 +815,28 @@ D0DirectedFlowCorrelator::beginJob()
     f1[0] = (TF1*)f4.Get("f1");
     f1[1] = (TF1*)f4.Get("f2");
     f1[2] = (TF1*)f4.Get("f3");
+
+    edm::FileInPath fip5("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table_tight.root");
+    TFile f5(fip5.fullPath().c_str(),"READ");
+
+    d0EffTable_tight[0] = (TH1D*)f5.Get("hist_D0_eff_1");
+    d0EffTable_tight[1] = (TH1D*)f5.Get("hist_D0_eff_2");
+    d0EffTable_tight[2] = (TH1D*)f5.Get("hist_D0_eff_3");
+
+    f2[0] = (TF1*)f5.Get("f1");
+    f2[1] = (TF1*)f5.Get("f2");
+    f2[2] = (TF1*)f5.Get("f3");
+
+    edm::FileInPath fip6("DirectedFlowCorrelator/DirectedFlowCorrelator/data/D0_eff_table_loose.root");
+    TFile f6(fip6.fullPath().c_str(),"READ");
+
+    d0EffTable_loose[0] = (TH1D*)f6.Get("hist_D0_eff_1");
+    d0EffTable_loose[1] = (TH1D*)f6.Get("hist_D0_eff_2");
+    d0EffTable_loose[2] = (TH1D*)f6.Get("hist_D0_eff_3");
+
+    f3[0] = (TF1*)f6.Get("f1");
+    f3[1] = (TF1*)f6.Get("f2");
+    f3[2] = (TF1*)f6.Get("f3");
 
   }
   else{

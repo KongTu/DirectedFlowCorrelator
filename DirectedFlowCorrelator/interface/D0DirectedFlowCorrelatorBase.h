@@ -192,7 +192,11 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       //correction table
       TH2D* effTable[5];
       TH1D* d0EffTable[3];
+      TH1D* d0EffTable_tight[3];
+      TH1D* d0EffTable_loose[3];
       TF1* f1[3];
+      TF1* f2[3];
+      TF1* f3[3];
 
       TH1D* Ntrk;
       TH1D* vtxZ;
@@ -272,6 +276,8 @@ class D0DirectedFlowCorrelator : public edm::EDAnalyzer {
       bool doBothSide_;
       bool doPixelReco_;
       bool doHiReco_;
+      bool doTight_;
+      bool doLoose_;
 
       std::vector<double> etaBins_;
       std::vector<double> rapidityBins_;
