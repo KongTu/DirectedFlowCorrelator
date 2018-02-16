@@ -834,9 +834,9 @@ D0DirectedFlowCorrelator::beginJob()
     d0EffTable_loose[1] = (TH1D*)f7.Get("hist_D0_eff_2");
     d0EffTable_loose[2] = (TH1D*)f7.Get("hist_D0_eff_3");
 
-    f3[0] = (TF1*)f7.Get("f1");
-    f3[1] = (TF1*)f7.Get("f2");
-    f3[2] = (TF1*)f7.Get("f3");
+    // f3[0] = (TF1*)f7.Get("f1");
+    // f3[1] = (TF1*)f7.Get("f2");
+    // f3[2] = (TF1*)f7.Get("f3");
 
   }
   else{
