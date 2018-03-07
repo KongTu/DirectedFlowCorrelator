@@ -194,28 +194,22 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       TH1D* c2_ac_minus;
       
       TH1D* c2_ab;
+      TH1D* c2_ab_combined;
 
       TH1D* c2_a_real;
       TH1D* c2_b_real;
       TH1D* c2_c_plus_real;
       TH1D* c2_c_minus_real;
+      TH1D* c2_ab_real;
 
       TH1D* c2_a_imag;
       TH1D* c2_b_imag;
       TH1D* c2_c_plus_imag;
       TH1D* c2_c_minus_imag;
+      TH1D* c2_ab_imag;
 
-      TH1D* px_ave[20][2];
-      TH1D* pt_ave[20][2];
-
-      TH1D* c2_v1[20][2][2];
-      TH1D* c2_trk_accept[20][2][2];
-
-      TH1D* C_1_YY[20];
-      TH1D* C_1_YmY[20];
-
-      TH1D* C_2_YmY[20];
-      TH1D* C_3_YmY[20];
+      TH1D* c2_v1[20][2][3];
+      TH1D* c2_trk_accept[20][2][3];
 
       int Nmin_;
       int Nmax_;

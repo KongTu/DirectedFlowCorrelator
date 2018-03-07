@@ -187,15 +187,16 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   const int NetaBins = etaBins_.size() - 1 ;
 
-  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus;
   //HF towers loop to fill the towers' Q-vectors:
+  TComplex  Q_n3_1_HFplus, Q_n3_1_HFminus, Q_0_1_HFplus, Q_0_1_HFminus;
+  
+  //HF both side
+  TComplex Q_n3_1_HFcombined, Q_0_1_HFcombined;
+  
+  //charge independent, |eta|<0.8
   TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
-  //charge independent, |eta|<1.0
+  
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
-
-  double px_track[NetaBins][2];
-  double pt_track[NetaBins][2];
-  double track_count[NetaBins][2];
 
   for(unsigned i = 0; i < towers->size(); ++i){
 
@@ -212,11 +213,17 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
+              Q_n3_1_HFcombined += q_vector(+1, 1, w, caloPhi);
+              Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
+
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
+
+              Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
+              Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
           }
           else{continue;}
@@ -333,21 +340,29 @@ event average v1
 
   c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
+  N_2_trk = Q_n3_1_HFcombined*TComplex::Conjugate(Q_n3_1_HFcombined);
+  D_2_trk = Q_0_1_HFcombined*Q_0_1_HFcombined;
+
+  c2_ab_combined->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
+
   c2_a_real->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_plus_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
   c2_c_minus_real->Fill( Q_n3_trk_minus.Re()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
+  c2_ab_real->Fill( Q_n3_1_HFcombined.Re()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
 
   c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_plus_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
   c2_c_minus_imag->Fill( Q_n3_trk_minus.Im()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
+  c2_ab_imag->Fill( Q_n3_1_HFcombined.Im()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
 
 //numerator
   for(int eta = 0; eta < NetaBins; eta++){
-    for(int charge = 0; charge < 2; charge++){
+    for(int charge = 0; charge < 3; charge++){
 
       TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
+      TComplex N_v1_AB_SP, D_v1_AB_SP;
 
       N_v1_A_SP = Q_n1_1[eta][charge]*Q_n3_1_HFminus;
       D_v1_A_SP = Q_0_1[eta][charge]*Q_0_1_HFminus;
@@ -359,8 +374,14 @@ event average v1
 
       double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
 
+      N_v1_AB_SP = Q_n1_1[eta][charge]*Q_n3_1_HFcombined;
+      D_v1_AB_SP = Q_0_1[eta][charge]*Q_0_1_HFcombined;
+
+      double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
+
       c2_v1[eta][charge][0]->Fill( V1_A, D_v1_A_SP.Re() );
       c2_v1[eta][charge][1]->Fill( V1_B, D_v1_B_SP.Re() );
+      c2_v1[eta][charge][2]->Fill( V1_AB, D_v1_AB_SP.Re() );
 
       c2_trk_accept[eta][charge][0]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
       c2_trk_accept[eta][charge][1]->Fill(Q_n1_1[eta][charge].Im()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
@@ -414,15 +435,7 @@ DirectedFlowCorrelatorTest::beginJob()
 
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
-
-      px_ave[eta][charge] = fs->make<TH1D>(Form("px_ave_%d_%d",eta,charge),";px", 150,0,15.0);
-      pt_ave[eta][charge] = fs->make<TH1D>(Form("pt_ave_%d_%d",eta,charge),";pt", 150,0,15.0);
-    }
-  }
-
-  for(int eta = 0; eta < NetaBins; eta++){
-    for(int charge = 0; charge < 2; charge++){
-      for(int dir = 0; dir < 2; dir++){
+      for(int dir = 0; dir < 3; dir++){
 
         c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
         c2_trk_accept[eta][charge][dir] = fs->make<TH1D>(Form("c2_trk_accept_%d_%d_%d",eta,charge,dir), ";c1", 1,-1,1);
@@ -433,7 +446,8 @@ DirectedFlowCorrelatorTest::beginJob()
 
 
   c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
-  
+  c2_ab_combined = fs->make<TH1D>("c2_ab_combined",";c2_ab_combined", 1,-1,1);
+
   c2_ac_plus = fs->make<TH1D>("c2_ac_plus",";c2_ac_plus", 1,-1,1);
   c2_cb_plus = fs->make<TH1D>("c2_cb_plus",";c2_cb_plus", 1,-1,1);
 
@@ -442,13 +456,15 @@ DirectedFlowCorrelatorTest::beginJob()
 
   c2_a_real = fs->make<TH1D>("c2_a_real",";c2_a_real", 1,-1,1);
   c2_b_real = fs->make<TH1D>("c2_b_real",";c2_b_real", 1,-1,1);
-  c2_c_plus_real = fs->make<TH1D>("c2_c_plus_real",";c2_c_real", 1,-1,1);
-  c2_c_minus_real = fs->make<TH1D>("c2_c_minus_real",";c2_c_real", 1,-1,1);
+  c2_c_plus_real = fs->make<TH1D>("c2_c_plus_real",";c2_c_plus_real", 1,-1,1);
+  c2_c_minus_real = fs->make<TH1D>("c2_c_minus_real",";c2_c_minus_real", 1,-1,1);
+  c2_ab_real = fs->make<TH1D>("c2_ab_real",";c2_ab_real", 1,-1,1);
 
   c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
   c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_imag", 1,-1,1);
-  c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
+  c2_ab_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
+  c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
 
 }
 
