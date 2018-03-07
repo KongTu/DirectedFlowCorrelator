@@ -527,14 +527,14 @@ DirectedFlowCorrelatorTest::beginJob()
   }
 
   if( !doPixelReco_ ){
-    edm::FileInPath fip1("DirectedFlowCorrelatorTest/DirectedFlowCorrelatorTest/data/Hydjet_eff_mult_v1.root");
+    edm::FileInPath fip1("DirectedFlowCorrelator/DirectedFlowCorrelator/data/Hydjet_eff_mult_v1.root");
     TFile f1(fip1.fullPath().c_str(),"READ");
     for(int i = 0; i < 5; i++){
        effTable[i] = (TH2D*)f1.Get(Form("rTotalEff3D_%d",i));
     }
   }
   else{
-    edm::FileInPath fip2("DirectedFlowCorrelatorTest/DirectedFlowCorrelatorTest/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
+    edm::FileInPath fip2("DirectedFlowCorrelator/DirectedFlowCorrelator/data/EffCorrectionsPixel_TT_pt_0_10_v2.root");
     TFile f2(fip2.fullPath().c_str(),"READ");
      
     effTable[0] = (TH2D*)f2.Get("Eff_50_100");
