@@ -353,11 +353,17 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   //Two terms are calculated 
   //<cos(phi+Psi_1-2*Psi_2)>
   //<cos(2*(Psi_1-Psi_2))
-  double term_1 = 0.0;
-  double term_1_weight = 0.0;
+  double term_1[NetaBins];
+  double term_1_weight[NetaBins];
 
   double term_2 = 0.0;
   double term_2_weight = 0.0;
+
+  for(int i = 0; i < NetaBins; i++){
+
+    term_1[i] = 0.0;
+    term_1_weight[i] = 0.0;
+  }
 
   //track loop to calculate the correlator:
   for(unsigned it = 0; it < tracks->size(); it++){
@@ -396,12 +402,22 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
     if(fabs(trkEta) > etaTracker_ ) continue;
 
-    term_1 += weight*cos(phi+Psi_1-2*Psi_2);
-    term_1_weight += weight;
+    for(int eta = 0; eta < NetaBins; eta++){
+      if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
+        term_1[eta] += weight*cos(phi+Psi_1-2*Psi_2);
+        term_1_weight[eta] += weight;
+      
+      }
+    }
+    
   }
 
-  Phi_Psi_1_Psi_2->Fill(term_1/term_1_weight, term_1_weight);
+  for(int eta = 0; eta < NetaBins; eta++){
+
+    Phi_Psi_1_Psi_2[eta]->Fill(term_1[eta]/term_1_weight[eta], term_1_weight[eta]); 
+  }
+  
  
   term_2 = cos(2*Psi_1-2*Psi_2);
   term_2_weight = nTracks; //Use track multiplicity
@@ -570,7 +586,11 @@ DirectedFlowCorrelatorTest::beginJob()
   c2_ab_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
 
-  Phi_Psi_1_Psi_2 = fs->make<TH1D>("Phi_Psi_1_Psi_2",";Phi_Psi_1_Psi_2", 1,-1,1);
+  
+  for(int eta = 0; eta < NetaBins; eta++){
+
+    Phi_Psi_1_Psi_2[eta] = fs->make<TH1D>(Form("Phi_Psi_1_Psi_2_%d",eta),";Phi_Psi_1_Psi_2", 1,-1,1);
+  }
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
 
