@@ -195,8 +195,15 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   
   //charge independent, |eta|<0.8
   TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
+
+  //Psi_2 event plane resolution variables:
+  TComplex Q_n1_Psi2_minus, Q_0_Psi2_minus, Q_n1_Psi2_plus, Q_0_Psi2_plus;
   
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
+
+
+  double HF_Psi_1_cosine = 0.0;
+  double HF_Psi_1_sine = 0.0;
 
   for(unsigned i = 0; i < towers->size(); ++i){
 
@@ -207,7 +214,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
           double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
 
           hfPhi->Fill(caloPhi, w);
-          
+  
           if( caloEta < etaHighHF_ && caloEta > etaLowHF_ ){
             
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
@@ -215,6 +222,9 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
               Q_n3_1_HFcombined += q_vector(+1, 1, w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
+
+              HF_Psi_1_sine += w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += w*cos( 1*caloPhi );
 
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
@@ -225,10 +235,19 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
+              HF_Psi_1_sine += -w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += -w*cos( 1*caloPhi );
+
           }
           else{continue;}
   }
 
+  //Psi_1 in HF:
+  double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
+
+
+  double TRK_Psi_2_sine = 0.0;
+  double TRK_Psi_2_cosine = 0.0;
   //track loop to fill charged particles Q-vectors
   for(unsigned it = 0; it < tracks->size(); it++){
 
@@ -270,6 +289,26 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     trkPt->Fill(trk.pt(), weight);
     trk_eta->Fill(trkEta, weight);
 
+    //For Psi_2 plane resoution:
+    if( trkEta < 0.0 && trkEta > -1.0 ){
+
+      Q_n1_Psi2_minus += q_vector(+2, 1, weight, phi);
+      Q_0_Psi2_minus += q_vector(0, 1, weight, phi); 
+
+    }
+    if( trkEta < 1.0 && trkEta > 0.0 ){
+
+      Q_n1_Psi2_plus += q_vector(+2, 1, weight, phi);
+      Q_0_Psi2_plus += q_vector(0, 1, weight, phi);
+
+    }
+    //For Psi_2 event plane angle:
+    if( trkEta > -1.0 && trkEta < 1.0){
+
+      TRK_Psi_2_sine += weight*sin( 2*phi );
+      TRK_Psi_2_cosine += weight*cos( 2*phi );
+    }
+
     if( trkEta < 0.0 && trkEta > -0.8 ){
    
       Q_n3_trk_minus += q_vector(+1, 1, -weight, phi);//for scalar product in tracker
@@ -308,13 +347,77 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   }
 
 
+  //Psi_2 event plane angle:
+  double Psi_2 = TMath::ATan(TRK_Psi_2_sine/TRK_Psi_2_cosine)/2;
+
+  //Two terms are calculated 
+  //<cos(phi+Psi_1-2*Psi_2)>
+  //<cos(2*(Psi_1-Psi_2))
+  double term_1 = 0.0;
+  double term_1_weight = 0.0;
+
+  double term_2 = 0.0;
+  double term_2_weight = 0.0;
+
+  //track loop to calculate the correlator:
+  for(unsigned it = 0; it < tracks->size(); it++){
+
+    const reco::Track & trk = (*tracks)[it];
+
+    math::XYZPoint bestvtx(bestvx,bestvy,bestvz);
+
+    double dzvtx = trk.dz(bestvtx);
+    double dxyvtx = trk.dxy(bestvtx);
+    double dzerror = sqrt(trk.dzError()*trk.dzError()+bestvzError*bestvzError);
+    double dxyerror = sqrt(trk.d0Error()*trk.d0Error()+bestvxError*bestvyError); 
+    double nhits = trk.numberOfValidHits();
+    double chi2n = trk.normalizedChi2();
+    double nlayers = trk.hitPattern().trackerLayersWithMeasurement();
+    chi2n = chi2n/nlayers;
+    double nPixelLayers = trk.hitPattern().pixelLayersWithMeasurement();//only pixel layers
+    double phi = trk.phi();
+    double trkEta = trk.eta();
+
+    double weight = 1.0;
+    if( doEffCorrection_ ) { 
+      weight = 1.0/effTable[eff_]->GetBinContent( effTable[eff_]->FindBin(trk.eta(), trk.pt()) );
+    }
+
+    if(!trk.quality(reco::TrackBase::highPurity)) continue;
+    if(fabs(trk.ptError())/trk.pt() > offlineptErr_ ) continue;
+    if(fabs(dzvtx/dzerror) > offlineDCA_) continue;
+    
+    if( !doPixelReco_){ if(fabs(dxyvtx/dxyerror) > offlineDCA_) continue; }
+    if(chi2n > offlineChi2_ ) continue;
+
+    if( doPixelReco_ ){ if(nhits != 3 && nhits != 4 && nhits != 5 && nhits != 6) continue;}
+    else{ if(nhits < offlinenhits_ ) continue; if( nPixelLayers <= 0 ) continue;}
+    
+    if(trk.pt() < ptLow_ || trk.pt() > ptHigh_ ) continue;
+    if(fabs(trkEta) > etaTracker_ ) continue;
+
+    term_1 += weight*cos(phi+Psi_1-2*Psi_2);
+    term_1_weight += weight;
+
+  }
+
+  Phi_Psi_1_Psi_2->Fill(term_1/term_1_weight, term_1_weight);
+ 
+  term_2 = cos(2*Psi_1-2*Psi_2);
+  Psi_1_Psi_2->Fill(term_2, nTracks);
+
+  TComplex N_2_trk, D_2_trk;
+
+  N_2_trk = Q_n1_Psi2_plus*Q_n1_Psi2_minus;
+  D_2_trk = Q_0_Psi2_plus*Q_0_Psi2_minus;
+
+  Psi_2_trk_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+
 /*
 event average v1
 */
 
 //resolution factor
-  TComplex N_2_trk, D_2_trk;
-
   N_2_trk = Q_n3_trk_plus*Q_n3_1_HFplus;
   D_2_trk = Q_0_trk_plus*Q_0_1_HFplus;
 
@@ -465,6 +568,10 @@ DirectedFlowCorrelatorTest::beginJob()
   c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
+
+  Phi_Psi_1_Psi_2 = fs->make<TH1D>("Phi_Psi_1_Psi_2",";Phi_Psi_1_Psi_2", 1,-1,1);
+  Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
+  Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
 
 }
 
