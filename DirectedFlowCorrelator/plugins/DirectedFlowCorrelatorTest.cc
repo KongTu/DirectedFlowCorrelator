@@ -405,7 +405,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
  
   term_2 = cos(2*Psi_1-2*Psi_2);
   term_2_weight = nTracks; //Use track multiplicity
-  Psi_1_Psi_2->Fill(term_2, nTracks);
+  Psi_1_Psi_2->Fill(term_2, term_2_weight);
 
   TComplex N_2_trk, D_2_trk;
 
