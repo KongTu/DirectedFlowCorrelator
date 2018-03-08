@@ -212,6 +212,9 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       TH1D* c2_trk_accept[20][2][3];
 
       TH1D* Psi_2_trk_reso;
+      TH1D* Psi_2_trk_accept_real[2];
+      TH1D* Psi_2_trk_accept_imag[2];
+
       TH1D* Phi_Psi_1_Psi_2[20];
       TH1D* Psi_1_Psi_2;
 

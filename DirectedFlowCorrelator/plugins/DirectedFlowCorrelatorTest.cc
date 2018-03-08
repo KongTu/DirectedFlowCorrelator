@@ -425,10 +425,15 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   TComplex N_2_trk, D_2_trk;
 
-  N_2_trk = Q_n1_Psi2_plus*Q_n1_Psi2_minus;
+  N_2_trk = Q_n1_Psi2_plus*TComplex::Conjugate(Q_n1_Psi2_minus);
   D_2_trk = Q_0_Psi2_plus*Q_0_Psi2_minus;
 
   Psi_2_trk_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  Psi_2_trk_accept_real[0]->Fill(Q_n1_Psi2_minus.Re()/Q_0_Psi2_minus.Re(), Q_0_Psi2_minus.Re());
+  Psi_2_trk_accept_imag[0]->Fill(Q_n1_Psi2_minus.Im()/Q_0_Psi2_minus.Re(), Q_0_Psi2_minus.Re());
+
+  Psi_2_trk_accept_real[1]->Fill(Q_n1_Psi2_plus.Re()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
+  Psi_2_trk_accept_imag[1]->Fill(Q_n1_Psi2_plus.Im()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
 
 /*
 event average v1
@@ -594,6 +599,12 @@ DirectedFlowCorrelatorTest::beginJob()
   }
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
+
+  for(int charge = 0; charge < 2; charge++){
+
+    Psi_2_trk_accept_real[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_real_%d",charge),";Psi_2_trk_accept_real", 1,-1,1);
+    Psi_2_trk_accept_imag[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_imag_%d",charge),";Psi_2_trk_accept_imag", 1,-1,1);
+  }
 
 }
 
