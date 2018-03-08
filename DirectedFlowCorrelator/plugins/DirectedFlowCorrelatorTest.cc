@@ -460,22 +460,23 @@ event average v1
 
   c2_ab->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
 
-  N_2_trk = Q_n3_1_HFcombined*TComplex::Conjugate(Q_n3_1_HFcombined);
-  D_2_trk = Q_0_1_HFcombined*Q_0_1_HFcombined;
-
-  c2_ab_combined->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
-
   c2_a_real->Fill( Q_n3_1_HFminus.Re()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_real->Fill( Q_n3_1_HFplus.Re()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_plus_real->Fill( Q_n3_trk_plus.Re()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
   c2_c_minus_real->Fill( Q_n3_trk_minus.Re()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
-  c2_ab_real->Fill( Q_n3_1_HFcombined.Re()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
 
   c2_a_imag->Fill( Q_n3_1_HFminus.Im()/Q_0_1_HFminus.Re(), Q_0_1_HFminus.Re() );
   c2_b_imag->Fill( Q_n3_1_HFplus.Im()/Q_0_1_HFplus.Re(), Q_0_1_HFplus.Re() );
   c2_c_plus_imag->Fill( Q_n3_trk_plus.Im()/Q_0_trk_plus.Re(), Q_0_trk_plus.Re() );
   c2_c_minus_imag->Fill( Q_n3_trk_minus.Im()/Q_0_trk_minus.Re(), Q_0_trk_minus.Re() );
+
+  N_2_trk = Q_n3_1_HFcombined*TComplex::Conjugate(Q_n3_1_HFcombined);
+  D_2_trk = Q_0_1_HFcombined*Q_0_1_HFcombined;
+
+  c2_ab_combined->Fill( N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re() );
+  c2_ab_real->Fill( Q_n3_1_HFcombined.Re()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
   c2_ab_imag->Fill( Q_n3_1_HFcombined.Im()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
+
 
 //numerator
   for(int eta = 0; eta < NetaBins; eta++){
@@ -582,8 +583,8 @@ DirectedFlowCorrelatorTest::beginJob()
 
   c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
-  c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_imag", 1,-1,1);
-  c2_ab_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_imag", 1,-1,1);
+  c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_plus_imag", 1,-1,1);
+  c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_minus_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
 
   
