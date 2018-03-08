@@ -244,6 +244,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   //Psi_1 in HF:
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
+  Psi_1_cos->Fill(HF_Psi_1_cosine);
+  Psi_1_sin->Fill(HF_Psi_1_sine);
 
 
   double TRK_Psi_2_sine = 0.0;
@@ -349,6 +351,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   //Psi_2 event plane angle:
   double Psi_2 = TMath::ATan(TRK_Psi_2_sine/TRK_Psi_2_cosine)/2;
+  Psi_2_cos->Fill(TRK_Psi_2_cosine);
+  Psi_2_sin->Fill(TRK_Psi_2_sine);
 
   //Two terms are calculated 
   //<cos(phi+Psi_1-2*Psi_2)>
@@ -605,6 +609,11 @@ DirectedFlowCorrelatorTest::beginJob()
     Psi_2_trk_accept_real[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_real_%d",charge),";Psi_2_trk_accept_real", 1,-1,1);
     Psi_2_trk_accept_imag[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_imag_%d",charge),";Psi_2_trk_accept_imag", 1,-1,1);
   }
+
+  Psi_2_sin = fs->make<TH1D>("Psi_2_sin",";Psi_2_sin", 1,-10000,10000);
+  Psi_2_cos = fs->make<TH1D>("Psi_2_cos",";Psi_2_cos", 1,-10000,10000);
+  Psi_1_sin = fs->make<TH1D>("Psi_1_sin",";Psi_1_sin", 1,-10000,10000);
+  Psi_1_cos = fs->make<TH1D>("Psi_1_cos",";Psi_1_cos", 1,-10000,10000);
 
 }
 

@@ -218,6 +218,13 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       TH1D* Phi_Psi_1_Psi_2[20];
       TH1D* Psi_1_Psi_2;
 
+      //recentering
+      TH1D* Psi_1_cos;
+      TH1D* Psi_1_sin;
+
+      TH1D* Psi_2_cos;
+      TH1D* Psi_2_sin;
+
 
       int Nmin_;
       int Nmax_;
