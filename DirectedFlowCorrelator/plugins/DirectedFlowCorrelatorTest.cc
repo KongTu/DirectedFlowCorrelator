@@ -479,7 +479,7 @@ event average v1
 
 //numerator
   for(int eta = 0; eta < NetaBins; eta++){
-    for(int charge = 0; charge < 3; charge++){
+    for(int charge = 0; charge < 2; charge++){
 
       TComplex N_v1_A_SP, D_v1_A_SP, N_v1_B_SP, D_v1_B_SP;
       TComplex N_v1_AB_SP, D_v1_AB_SP;
