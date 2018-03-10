@@ -243,6 +243,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   }
 
   //Psi_1 in HF:
+  HF_Psi_1_sine = HF_Psi_1_sine - (-0.1745);
+  HF_Psi_1_cosine = HF_Psi_1_cosine - 0.4802;
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
   Psi_1_cos->Fill(HF_Psi_1_cosine);
   Psi_1_sin->Fill(HF_Psi_1_sine);
@@ -350,6 +352,9 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
 
   //Psi_2 event plane angle:
+
+  TRK_Psi_2_sine = TRK_Psi_2_sine - 0.042;
+  TRK_Psi_2_cosine = TRK_Psi_2_cosine - 0.1017;
   double Psi_2 = TMath::ATan(TRK_Psi_2_sine/TRK_Psi_2_cosine)/2;
   Psi_2_cos->Fill(TRK_Psi_2_cosine);
   Psi_2_sin->Fill(TRK_Psi_2_sine);
