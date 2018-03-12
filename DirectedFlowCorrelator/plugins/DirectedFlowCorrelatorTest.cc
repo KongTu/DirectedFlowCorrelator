@@ -235,20 +235,19 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
-              HF_Psi_1_sine += -w*sin( 1*caloPhi );
-              HF_Psi_1_cosine += -w*cos( 1*caloPhi );
+              HF_Psi_1_sine += w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += w*cos( 1*caloPhi );
 
           }
           else{continue;}
   }
 
   //Psi_1 in HF:
-  HF_Psi_1_sine = HF_Psi_1_sine - (-0.1745);
-  HF_Psi_1_cosine = HF_Psi_1_cosine - 0.4802;
+  HF_Psi_1_sine = HF_Psi_1_sine;
+  HF_Psi_1_cosine = HF_Psi_1_cosine;
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
   Psi_1_cos->Fill(HF_Psi_1_cosine);
   Psi_1_sin->Fill(HF_Psi_1_sine);
-
 
   double TRK_Psi_2_sine = 0.0;
   double TRK_Psi_2_cosine = 0.0;
@@ -353,8 +352,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   //Psi_2 event plane angle:
 
-  TRK_Psi_2_sine = TRK_Psi_2_sine - 0.042;
-  TRK_Psi_2_cosine = TRK_Psi_2_cosine - 0.1017;
+  TRK_Psi_2_sine = TRK_Psi_2_sine;
+  TRK_Psi_2_cosine = TRK_Psi_2_cosine;
   double Psi_2 = TMath::ATan(TRK_Psi_2_sine/TRK_Psi_2_cosine)/2;
   Psi_2_cos->Fill(TRK_Psi_2_cosine);
   Psi_2_sin->Fill(TRK_Psi_2_sine);
