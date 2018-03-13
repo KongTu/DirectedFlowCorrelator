@@ -235,8 +235,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
-              HF_Psi_1_sine += w*sin( 1*caloPhi );
-              HF_Psi_1_cosine += w*cos( 1*caloPhi );
+              HF_Psi_1_sine += -w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += -w*cos( 1*caloPhi );
 
           }
           else{continue;}
@@ -413,7 +413,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
-        term_1[eta] += weight*cos(phi-2*Psi_2);
+        term_1[eta] += weight*cos(phi+Psi_1-2*Psi_2);
         term_1_weight[eta] += weight;
       
       }
