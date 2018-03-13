@@ -413,7 +413,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
-        term_1[eta] += weight*cos(phi-Psi_1);
+        term_1[eta] += weight*cos(phi-2*Psi_2);
         term_1_weight[eta] += weight;
       
       }
