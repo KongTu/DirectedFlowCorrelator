@@ -243,8 +243,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   }
 
   //Psi_1 in HF:
-  HF_Psi_1_sine = HF_Psi_1_sine;
-  HF_Psi_1_cosine = HF_Psi_1_cosine;
+  HF_Psi_1_sine = HF_Psi_1_sine - (-0.1744);
+  HF_Psi_1_cosine = HF_Psi_1_cosine - 0.4749;
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
   Psi_1_cos->Fill(HF_Psi_1_cosine);
   Psi_1_sin->Fill(HF_Psi_1_sine);
@@ -352,8 +352,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   //Psi_2 event plane angle:
 
-  TRK_Psi_2_sine = TRK_Psi_2_sine;
-  TRK_Psi_2_cosine = TRK_Psi_2_cosine;
+  TRK_Psi_2_sine = TRK_Psi_2_sine - 0.0423;
+  TRK_Psi_2_cosine = TRK_Psi_2_cosine - 0.1018;
   double Psi_2 = TMath::ATan(TRK_Psi_2_sine/TRK_Psi_2_cosine)/2;
   Psi_2_cos->Fill(TRK_Psi_2_cosine);
   Psi_2_sin->Fill(TRK_Psi_2_sine);
@@ -415,6 +415,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
         term_1[eta] += weight*cos(phi+Psi_1-2*Psi_2);
         term_1_weight[eta] += weight;
+
+        Phi_Average[eta]->Fill( cos(phi) );
       
       }
     }
@@ -604,6 +606,7 @@ DirectedFlowCorrelatorTest::beginJob()
   for(int eta = 0; eta < NetaBins; eta++){
 
     Phi_Psi_1_Psi_2[eta] = fs->make<TH1D>(Form("Phi_Psi_1_Psi_2_%d",eta),";Phi_Psi_1_Psi_2", 1,-1,1);
+    Phi_Average[eta] = fs->make<TH1D>(Form("Phi_Average_%d",eta),";Phi_Average", 1,-1,1);
   }
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
