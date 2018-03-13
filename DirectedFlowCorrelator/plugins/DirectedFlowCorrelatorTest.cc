@@ -205,9 +205,6 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   double HF_Psi_1_cosine = 0.0;
   double HF_Psi_1_sine = 0.0;
 
-  double HF_Psi_1_cosine_test = 0.0;
-  double HF_Psi_1_sine_test = 0.0;
-
   for(unsigned i = 0; i < towers->size(); ++i){
 
           const CaloTower & hit= (*towers)[i];
@@ -217,13 +214,6 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
           double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
 
           hfPhi->Fill(caloPhi, w);
-
-          if( fabs(caloEta) < etaHighHF_ && fabs(caloEta) > etaLowHF_ ){
-
-              HF_Psi_1_sine_test += w*sin( 1*caloPhi );
-              HF_Psi_1_cosine_test += w*cos( 1*caloPhi );
-
-          }
   
           if( caloEta < etaHighHF_ && caloEta > etaLowHF_ ){
             
@@ -258,12 +248,6 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
   Psi_1_cos->Fill(HF_Psi_1_cosine);
   Psi_1_sin->Fill(HF_Psi_1_sine);
-
-  cout << "default cos " << HF_Psi_1_cosine << endl;
-  cout << "default sin " << HF_Psi_1_sine << endl;
-
-  cout << "new cos " << HF_Psi_1_cosine_test << endl;
-  cout << "new sin " << HF_Psi_1_sine_test << endl;
 
   double TRK_Psi_2_sine = 0.0;
   double TRK_Psi_2_cosine = 0.0;
@@ -429,7 +413,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
-        term_1[eta] += weight*cos(phi+Psi_1-2*Psi_2);
+        term_1[eta] += weight*cos(phi-Psi_1);
         term_1_weight[eta] += weight;
       
       }
