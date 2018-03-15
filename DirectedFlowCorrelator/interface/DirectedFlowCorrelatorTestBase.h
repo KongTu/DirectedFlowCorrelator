@@ -255,6 +255,8 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       bool doBothSide_;
       bool doPixelReco_;
 
+      std::vector<double> phiCos_;
+      std::vector<double> phiSin_;
       std::vector<double> etaBins_;
       std::vector<double> ptBins_;
       std::vector<double> centBins_;

@@ -28,7 +28,8 @@ ana = cms.EDAnalyzer('DirectedFlowCorrelatorTest',
 						  etaLowHF = cms.untracked.double(3.0),
                                                   etaHighHF = cms.untracked.double(5.0),
                                   
-
+                                                  phiCos = cms.untracked.vdouble(-0.00120278, 0.0117162, 0.00608614, 0.00281297, -0.000705953, -0.000787637, 0.000345813, 0.00583001),
+                                                  phiSin = cms.untracked.vdouble(0.00674639, -0.00868033, -0.0080798, -0.00619422, -0.00762619, -0.00569126, -0.0054401, 0.00971815),
                                                   etaBins = cms.untracked.vdouble(-2.4,-2.0,-1.2,-0.6,0.0,0.6,1.2,2.0,2.4),
                                                 
 						  ptBins = cms.untracked.vdouble(0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,

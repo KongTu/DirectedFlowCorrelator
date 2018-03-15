@@ -62,6 +62,8 @@ DirectedFlowCorrelatorTest::DirectedFlowCorrelatorTest(const edm::ParameterSet& 
   offlineChi2_ = iConfig.getUntrackedParameter<double>("offlineChi2", 0.0);
   offlinenhits_ = iConfig.getUntrackedParameter<double>("offlinenhits", 0.0);
 
+  phiCos_ = iConfig.getUntrackedParameter<std::vector<double>>("phiCos");
+  phiSin_ = iConfig.getUntrackedParameter<std::vector<double>>("phiSin");
 
   etaBins_ = iConfig.getUntrackedParameter<std::vector<double>>("etaBins");
   ptBins_ = iConfig.getUntrackedParameter<std::vector<double>>("ptBins");
@@ -413,11 +415,14 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
-        term_1[eta] += weight*cos(phi+Psi_1-2*Psi_2);
+        double cos_phi_angle = cos(phi)-phiCos_[eta];
+        double sin_phi_angle = sin(phi)-phiSin_[eta];
+
+        term_1[eta] += weight*(cos_phi_angle*cos(Psi_1-2*Psi_2) - sin_phi_angle*sin(Psi_1-2*Psi_2));
         term_1_weight[eta] += weight;
 
-        Phi_Average_cos[eta]->Fill( cos(phi) );
-        Phi_Average_sin[eta]->Fill( sin(phi) );
+        Phi_Average_cos[eta]->Fill( cos_phi_angle );
+        Phi_Average_sin[eta]->Fill( sin_phi_angle );
       
       }
     }
