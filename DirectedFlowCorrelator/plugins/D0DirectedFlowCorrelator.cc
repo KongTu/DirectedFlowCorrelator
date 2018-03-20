@@ -231,6 +231,9 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   //D0 mass-fit method, no separation of obs and bkg
   TComplex Q_D0_n1_1[NyBins][30][3], Q_D0_0_1[NyBins][30][3];
 
+  double HF_Psi_1_cosine = 0.0;
+  double HF_Psi_1_sine = 0.0;
+
   for(unsigned i = 0; i < towers->size(); ++i){
 
           const CaloTower & hit= (*towers)[i];
@@ -249,6 +252,9 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               Q_n3_1_HFplusANDminus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplusANDminus += q_vector(0, 1, w, caloPhi);
 
+              HF_Psi_1_sine += w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += w*cos( 1*caloPhi );
+
           }
           else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
@@ -257,9 +263,16 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
 
               Q_n3_1_HFplusANDminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFplusANDminus += q_vector(0, 1, w, caloPhi);
+
+              HF_Psi_1_sine += -w*sin( 1*caloPhi );
+              HF_Psi_1_cosine += -w*cos( 1*caloPhi );
           }
           else{continue;}
   }
+
+  double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
+  Psi_1_cos->Fill(HF_Psi_1_cosine);
+  Psi_1_sin->Fill(HF_Psi_1_sine);
 
 //track loop to fill charged particles Q-vectors
   for(unsigned it = 0; it < tracks->size(); it++){
@@ -589,6 +602,28 @@ D0 candiates' loop
             }
       }
     }
+
+    for(int rap = 0; rap < NyBins; rap++){
+        if( y_D0 > rapidityBins_[rap] && y_D0 < rapidityBins_[rap+1] ){
+          
+          double delta_phi = phi - Psi_1;
+          if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
+          if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
+
+          //Fill mass in each y
+          if( charge1 == +1 && mass1 < 0.14 && mass1 > 0.13 ){
+
+            D0Mass_Hist_DeltaPhi[rap][0]->Fill(delta_phi, mass );
+          }
+          if( charge2 == -1 && mass2 < 0.14 && mass2 > 0.13 ){
+
+            D0Mass_Hist_DeltaPhi[rap][1]->Fill(delta_phi, mass );
+          }
+
+          D0Mass_Hist_DeltaPhi[rap][2]->Fill(delta_phi, mass);
+        }
+    }
+ 
   }
 
 
@@ -901,6 +936,7 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 3; charge++){
 
       D0Mass_Hist[rap][charge] = fs->make<TH1D>(Form("D0Mass_Hist_%d_%d",rap,charge),";mass",300,1.7,2.0);
+      D0Mass_Hist_DeltaPhi[rap][charge] = fs->make<TH1D>(Form("D0Mass_Hist_DeltaPhi_%d_%d",rap,charge),";mass",300,1.7,2.0);
     }
   }
 
@@ -927,6 +963,9 @@ D0DirectedFlowCorrelator::beginJob()
 
   c2_ab_one_real = fs->make<TH1D>("c2_ab_one_real",";c2_ab_one_real", 1,-1,1);
   c2_ab_one_imag = fs->make<TH1D>("c2_ab_one_imag",";c2_ab_one_imag", 1,-1,1);
+
+  Psi_1_sin = fs->make<TH1D>("Psi_1_sin",";Psi_1_sin", 1,-10000,10000);
+  Psi_1_cos = fs->make<TH1D>("Psi_1_cos",";Psi_1_cos", 1,-10000,10000);
 
 }
 
