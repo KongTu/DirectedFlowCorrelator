@@ -936,7 +936,7 @@ D0DirectedFlowCorrelator::beginJob()
     for(int charge = 0; charge < 3; charge++){
 
       D0Mass_Hist[rap][charge] = fs->make<TH1D>(Form("D0Mass_Hist_%d_%d",rap,charge),";mass",300,1.7,2.0);
-      D0Mass_Hist_DeltaPhi[rap][charge] = fs->make<TH2D>(Form("D0Mass_Hist_DeltaPhi_%d_%d",rap,charge),";#Deltaphi;mass",10,-PI,PI,300,1.7,2.0);
+      D0Mass_Hist_DeltaPhi[rap][charge] = fs->make<TH2D>(Form("D0Mass_Hist_DeltaPhi_%d_%d",rap,charge),";#Deltaphi;mass",20,-PI,PI,300,1.7,2.0);
     }
   }
 
