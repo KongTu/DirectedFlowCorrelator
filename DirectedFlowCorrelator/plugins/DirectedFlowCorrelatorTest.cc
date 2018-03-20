@@ -334,21 +334,33 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
+        double delta_phi = phi - Psi_1;
+        if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
+        if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
+
+
         if( trk.charge() == +1 ){//positive charge
 
           //3p:
           Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
           Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
+          delta_phi_positive[eta]->Fill(delta_phi);
+
         }
         if( trk.charge() == -1 ){//negative charge
 
           Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
           Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+          
+          delta_phi_negative[eta]->Fill(delta_phi);
 
         }
       }
     }//end of eta dimension
+
+
+
   }
 
 
@@ -564,7 +576,6 @@ DirectedFlowCorrelatorTest::beginJob()
     effTable[2] = (TH2D*)f2.Get("Eff_10_30");
     effTable[3] = (TH2D*)f2.Get("Eff_5_10");
     effTable[4] = (TH2D*)f2.Get("Eff_0_5");
-    
   }
 
   Ntrk = fs->make<TH1D>("Ntrk",";Ntrk",5000,0,5000);
@@ -585,7 +596,6 @@ DirectedFlowCorrelatorTest::beginJob()
       }
     }
   }
-
 
   c2_ab = fs->make<TH1D>("c2_ab",";c2_ab", 1,-1,1);
   c2_ab_combined = fs->make<TH1D>("c2_ab_combined",";c2_ab_combined", 1,-1,1);
@@ -608,13 +618,13 @@ DirectedFlowCorrelatorTest::beginJob()
   c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_minus_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
 
-  
   for(int eta = 0; eta < NetaBins; eta++){
 
     Phi_Psi_1_Psi_2[eta] = fs->make<TH1D>(Form("Phi_Psi_1_Psi_2_%d",eta),";Phi_Psi_1_Psi_2", 1,-1,1);
     Phi_Average_cos[eta] = fs->make<TH1D>(Form("Phi_Average_cos_%d",eta),";Phi_Average_cos", 1,-1,1);
     Phi_Average_sin[eta] = fs->make<TH1D>(Form("Phi_Average_sin_%d",eta),";Phi_Average_sin", 1,-1,1);
   }
+
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
 
@@ -628,9 +638,14 @@ DirectedFlowCorrelatorTest::beginJob()
   Psi_2_cos = fs->make<TH1D>("Psi_2_cos",";Psi_2_cos", 1,-10000,10000);
   Psi_1_sin = fs->make<TH1D>("Psi_1_sin",";Psi_1_sin", 1,-10000,10000);
   Psi_1_cos = fs->make<TH1D>("Psi_1_cos",";Psi_1_cos", 1,-10000,10000);
+  
+  for(int eta = 0; eta < NetaBins; eta++){
+
+    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 20,-PI,PI);
+    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 20,-PI,PI);
+  }
 
 }
-
 TComplex 
 DirectedFlowCorrelatorTest::q_vector(double n, double p, double w, double phi) 
 {
