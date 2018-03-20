@@ -337,7 +337,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
         for(unsigned i = 0; i < towers->size(); ++i){
 
             const CaloTower & hit= (*towers)[i];
-
+            double caloEta = hit.eta();
             double caloPhi = hit.phi();
             double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
 
@@ -357,7 +357,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
       
             }
-            
+
           if( trk.charge() == +1 ){//positive charge
 
             //3p:
