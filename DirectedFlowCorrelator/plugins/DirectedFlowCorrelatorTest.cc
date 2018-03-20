@@ -641,8 +641,8 @@ DirectedFlowCorrelatorTest::beginJob()
   
   for(int eta = 0; eta < NetaBins; eta++){
 
-    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 20,-PI,PI);
-    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 20,-PI,PI);
+    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 40,-2*PI,2*PI);
+    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 40,-2*PI,2*PI);
   }
 
 }
