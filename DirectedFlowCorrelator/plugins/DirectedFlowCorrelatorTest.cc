@@ -353,14 +353,14 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
             Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
             Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
-            delta_phi_positive[eta]->Fill(delta_phi);
+            delta_phi_positive[eta]->Fill( fabs(delta_phi)) ;
           }
           if( trk.charge() == -1 ){//negative charge
 
             Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
             Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
             
-            delta_phi_negative[eta]->Fill(delta_phi);
+            delta_phi_negative[eta]->Fill( fabs(delta_phi) );
 
           }
         }
