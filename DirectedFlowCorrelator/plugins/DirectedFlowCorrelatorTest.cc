@@ -335,8 +335,17 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
           double delta_phi = phi - Psi_1;
-          if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
-          if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
+          if( delta_phi > PI ) {
+            
+            delta_phi = 2*PI - delta_phi;
+            if( delta_phi > PI/2.0 ) delta_phi = PI-delta_phi;
+
+          }
+          if( delta_phi < -PI ) {
+            delta_phi = delta_phi + 2*PI;
+
+            if(delta_phi < -PI/2.0) delta_phi = PI+delta_phi;
+          }
               
           if( trk.charge() == +1 ){//positive charge
 
@@ -637,8 +646,8 @@ DirectedFlowCorrelatorTest::beginJob()
   
   for(int eta = 0; eta < NetaBins; eta++){
 
-    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 200,-PI,PI);
-    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 200,-PI,PI);
+    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 20,-PI,PI);
+    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 20,-PI,PI);
   }
 
 }
