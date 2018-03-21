@@ -339,7 +339,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
             const CaloTower & hit= (*towers)[i];
             double caloEta = hit.eta();
             double caloPhi = hit.phi();
-            double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
+            //double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
 
             double delta_phi = 0.0;
 
