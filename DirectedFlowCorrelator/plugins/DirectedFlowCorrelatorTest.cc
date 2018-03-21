@@ -338,13 +338,13 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
           if( delta_phi > PI ) {
             
             delta_phi = 2*PI - delta_phi;
-            if( delta_phi > PI/2.0 ) delta_phi = PI-delta_phi;
+            //if( delta_phi > PI/2.0 ) delta_phi = PI-delta_phi;
 
           }
           if( delta_phi < -PI ) {
             delta_phi = delta_phi + 2*PI;
 
-            if(delta_phi < -PI/2.0) delta_phi = PI+delta_phi;
+            //if(delta_phi > PI/2.0) delta_phi = PI-delta_phi;
           }
               
           if( trk.charge() == +1 ){//positive charge
