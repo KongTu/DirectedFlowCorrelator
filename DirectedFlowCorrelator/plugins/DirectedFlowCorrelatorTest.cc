@@ -364,14 +364,14 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
             // Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
             // Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
-            delta_phi_positive[eta]->Fill(delta_phi, w*weight);
+            delta_phi_positive[eta]->Fill(delta_phi);
           }
           if( trk.charge() == -1 ){//negative charge
 
             // Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
             // Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
             
-            delta_phi_negative[eta]->Fill(delta_phi, w*weight);
+            delta_phi_negative[eta]->Fill(delta_phi);
 
           }
         }
@@ -657,8 +657,8 @@ DirectedFlowCorrelatorTest::beginJob()
   
   for(int eta = 0; eta < NetaBins; eta++){
 
-    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 40,-2*PI,2*PI);
-    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 40,-2*PI,2*PI);
+    delta_phi_positive[eta] = fs->make<TH1D>(Form("delta_phi_positive_%d",eta),";#Delta#phi", 200,-PI,PI);
+    delta_phi_negative[eta] = fs->make<TH1D>(Form("delta_phi_negative_%d",eta),";#Delta#phi", 200,-PI,PI);
   }
 
 }
