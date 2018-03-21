@@ -334,48 +334,28 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     for(int eta = 0; eta < NetaBins; eta++){
       if( trkEta > etaBins_[eta] && trkEta < etaBins_[eta+1] ){
 
-        for(unsigned i = 0; i < towers->size(); ++i){
-
-            const CaloTower & hit= (*towers)[i];
-            double caloEta = hit.eta();
-            double caloPhi = hit.phi();
-            //double w = hit.hadEt( vtx.z() ) + hit.emEt( vtx.z() );
-
-            double delta_phi = 0.0;
-
-            if( caloEta < etaHighHF_ && caloEta > etaLowHF_ ){
-
-              delta_phi = phi - caloPhi;
-              if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
-              if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
+          double delta_phi = phi - Psi_1;
+          if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
+          if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
               
-            }
-            else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
-
-              delta_phi = phi - (-caloPhi);
-              if( delta_phi > PI ) delta_phi = 2*PI - delta_phi;
-              if( delta_phi < -PI ) delta_phi = delta_phi + 2*PI;
-      
-            }
-
           if( trk.charge() == +1 ){//positive charge
 
             //3p:
-            // Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
-            // Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
+            Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
+            Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
             delta_phi_positive[eta]->Fill(delta_phi);
           }
           if( trk.charge() == -1 ){//negative charge
 
-            // Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
-            // Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+            Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
+            Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
             
             delta_phi_negative[eta]->Fill(delta_phi);
 
           }
         }
-      }
+      
     }//end of eta dimension
   }
 
