@@ -208,8 +208,8 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       TH1D* c2_c_minus_imag;
       TH1D* c2_ab_imag;
 
-      TH1D* delta_phi_positive[20];
-      TH1D* delta_phi_negative[20];
+      TH1D* delta_phi_positive[20][2];
+      TH1D* delta_phi_negative[20][2];
 
       TH1D* c2_v1[20][2][3];
       TH1D* c2_trk_accept[20][2][3];
@@ -218,18 +218,19 @@ class DirectedFlowCorrelatorTest : public edm::EDAnalyzer {
       TH1D* Psi_2_trk_accept_real[2];
       TH1D* Psi_2_trk_accept_imag[2];
 
-      TH1D* Phi_Psi_1_Psi_2[20];
+      TH1D* Phi_Psi_1_Psi_2[20][2];
       TH1D* Phi_Average_cos[20];
       TH1D* Phi_Average_sin[20];
-      TH1D* Psi_1_Psi_2;
+      TH1D* Psi_1_Psi_2[2];
 
       //recentering
-      TH1D* Psi_1_cos;
-      TH1D* Psi_1_sin;
+      TH1D* Psi_1_cos_minus;
+      TH1D* Psi_1_sin_minus;
+      TH1D* Psi_1_cos_plus;
+      TH1D* Psi_1_sin_plus;
 
       TH1D* Psi_2_cos;
       TH1D* Psi_2_sin;
-
 
       int Nmin_;
       int Nmax_;
