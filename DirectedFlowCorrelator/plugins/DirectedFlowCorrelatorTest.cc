@@ -203,7 +203,6 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
 
-
   double HF_Psi_1_cosine = 0.0;
   double HF_Psi_1_sine = 0.0;
 
@@ -237,16 +236,16 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
-              HF_Psi_1_sine += -w*sin( 1*caloPhi );
-              HF_Psi_1_cosine += -w*cos( 1*caloPhi );
+              HF_Psi_1_sine += w*sin( 1*caloPhi-PI );
+              HF_Psi_1_cosine += w*cos( 1*caloPhi-PI );
 
           }
           else{continue;}
   }
 
   //Psi_1 in HF:
-  HF_Psi_1_sine = HF_Psi_1_sine - (-0.1744);
-  HF_Psi_1_cosine = HF_Psi_1_cosine - 0.4749;
+  HF_Psi_1_sine = HF_Psi_1_sine;
+  HF_Psi_1_cosine = HF_Psi_1_cosine;
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
   Psi_1_cos->Fill(HF_Psi_1_cosine);
   Psi_1_sin->Fill(HF_Psi_1_sine);
