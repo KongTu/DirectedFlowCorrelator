@@ -248,7 +248,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   //Psi_1 in HF:
 
-  double Psi_1_minus = -TMath::ATan(H_P_minussi_1_sine/HFminus_Psi_1_cosine)/1;
+  double Psi_1_minus = -TMath::ATan(HFminus_Psi_1_sine/HFminus_Psi_1_cosine)/1;
   double Psi_1_plus = TMath::ATan(HFplus_Psi_1_sine/HFplus_Psi_1_cosine)/1;
   
   Psi_1_cos_minus->Fill(HFminus_Psi_1_cosine);
