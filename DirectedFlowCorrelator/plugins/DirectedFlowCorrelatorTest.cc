@@ -222,7 +222,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
-              Q_n3_1_HFcombined += q_vector(+1, 1, w, caloPhi);
+              Q_n3_1_HFcombined += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
               HF_Psi_1_sine += -w*sin( 1*caloPhi );
@@ -234,7 +234,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
 
-              Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
+              Q_n3_1_HFcombined += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
               HF_Psi_1_sine += w*sin( 1*caloPhi );
