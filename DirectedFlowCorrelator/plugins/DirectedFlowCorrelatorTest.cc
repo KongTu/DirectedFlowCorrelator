@@ -568,7 +568,7 @@ event average v1
       
       if( eta == 3 || eta == 4){
 
-        N_v1_Mixed = (Q_n1_1[eta][charge]*Q_n1_Psi2 - Q_n1n3_2[[eta][charge]])*Q_n3_1_HFcombined;
+        N_v1_Mixed = (Q_n1_1[eta][charge]*Q_n1_Psi2 - Q_n1n3_2[eta][charge]])*Q_n3_1_HFcombined;
         D_v1_Mixed = (Q_0_1[eta][charge]*Q_0_Psi2 - Q_00_2[eta][charge])*Q_0_1_HFcombined;
 
         c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
