@@ -202,6 +202,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   TComplex Q_n1_Psi2, Q_0_Psi2, Q_n1_Psi2_minus, Q_0_Psi2_minus, Q_n1_Psi2_plus, Q_0_Psi2_plus;
   
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
+  TComplex Q_n1n3_2[NetaBins][2], Q_00_2[NetaBins][2];
 
 
   double HF_Psi_1_cosine = 0.0;
@@ -357,12 +358,18 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
             Q_n1_1[eta][0] += q_vector(+1, 1, weight, phi);
             Q_0_1[eta][0] += q_vector(0, 1, weight, phi);
 
+            Q_n1n3_2[eta][0] += q_vector(+1-2, 2, weight, phi);
+            Q_00_2[eta][0] += q_vector(0, 2, weight, phi);
+
             delta_phi_positive[eta]->Fill(delta_phi);
           }
           if( trk.charge() == -1 ){//negative charge
 
             Q_n1_1[eta][1] += q_vector(+1, 1, weight, phi);
             Q_0_1[eta][1] += q_vector(0, 1, weight, phi);
+
+            Q_n1n3_2[eta][1] += q_vector(+1-2, 2, weight, phi);
+            Q_00_2[eta][1] += q_vector(0, 2, weight, phi);
             
             delta_phi_negative[eta]->Fill(delta_phi);
 
@@ -558,11 +565,23 @@ event average v1
 
 
       TComplex N_v1_Mixed, D_v1_Mixed;
-      N_v1_Mixed = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2;
-      D_v1_Mixed = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2;
+      
+      if( eta == 3 || eta == 4){
 
-      c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
+        N_v1_Mixed = (Q_n1_1[eta][charge]*Q_n1_Psi2 - Q_n1n3_2[[eta][charge]])*Q_n3_1_HFcombined;
+        D_v1_Mixed = (Q_0_1[eta][charge]*Q_0_Psi2 - Q_00_2[eta][charge])*Q_0_1_HFcombined;
 
+        c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
+
+      }
+      else{
+
+        N_v1_Mixed = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2;
+        D_v1_Mixed = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2;
+
+        c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
+      }
+      
     }
   }
 
