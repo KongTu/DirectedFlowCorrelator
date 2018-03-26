@@ -199,7 +199,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   TComplex Q_n3_trk_minus, Q_0_trk_minus, Q_n3_trk_plus, Q_0_trk_plus;
 
   //Psi_2 event plane resolution variables:
-  TComplex Q_n1_Psi2_minus, Q_0_Psi2_minus, Q_n1_Psi2_plus, Q_0_Psi2_plus;
+  TComplex Q_n1_Psi2, Q_0_Psi2, Q_n1_Psi2_minus, Q_0_Psi2_minus, Q_n1_Psi2_plus, Q_0_Psi2_plus;
   
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
 
@@ -222,7 +222,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFplus += q_vector(-1, 1, w, caloPhi);
               Q_0_1_HFplus += q_vector(0, 1, w, caloPhi);
 
-              Q_n3_1_HFcombined += q_vector(-1, 1, w, caloPhi);
+              Q_n3_1_HFcombined += q_vector(+1, 1, w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
               HF_Psi_1_sine += -w*sin( 1*caloPhi );
@@ -234,7 +234,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
 
-              Q_n3_1_HFcombined += q_vector(-1, 1, -w, caloPhi);
+              Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
               Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
 
               HF_Psi_1_sine += w*sin( 1*caloPhi );
@@ -295,23 +295,27 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
     trk_eta->Fill(trkEta, weight);
 
     //For Psi_2 plane resoution:
-    if( trkEta < 0.0 && trkEta > -1.0 ){
+    if( trkEta < 0.0 && trkEta > -0.8 ){
 
-      Q_n1_Psi2_minus += q_vector(+2, 1, weight, phi);
+      Q_n1_Psi2_minus += q_vector(-2, 1, weight, phi);
       Q_0_Psi2_minus += q_vector(0, 1, weight, phi); 
 
     }
-    if( trkEta < 1.0 && trkEta > 0.0 ){
+    if( trkEta < 0.8 && trkEta > 0.0 ){
 
-      Q_n1_Psi2_plus += q_vector(+2, 1, weight, phi);
+      Q_n1_Psi2_plus += q_vector(-2, 1, weight, phi);
       Q_0_Psi2_plus += q_vector(0, 1, weight, phi);
 
     }
-    //For Psi_2 event plane angle:
-    if( trkEta > -1.0 && trkEta < 1.0){
+    //For Psi_2 event plane angle and Q vectors:
+    if( trkEta > -0.8 && trkEta < 0.8){
 
       TRK_Psi_2_sine += weight*sin( 2*phi );
       TRK_Psi_2_cosine += weight*cos( 2*phi );
+
+      Q_n1_Psi2 += q_vector(-2, 1, weight, phi);
+      Q_0_Psi2 += q_vector(0, 1, weight, phi);
+
     }
 
     if( trkEta < 0.0 && trkEta > -0.8 ){
@@ -450,11 +454,14 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
     Phi_Psi_1_Psi_2[eta]->Fill(term_1[eta]/term_1_weight[eta], term_1_weight[eta]); 
   }
-  
- 
+   
   term_2 = cos(2*Psi_1-2*Psi_2);
   term_2_weight = nTracks; //Use track multiplicity
   Psi_1_Psi_2->Fill(term_2, term_2_weight);
+
+/*
+Psi_2 resolution
+*/
 
   TComplex N_2_trk, D_2_trk;
 
@@ -467,6 +474,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
   Psi_2_trk_accept_real[1]->Fill(Q_n1_Psi2_plus.Re()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
   Psi_2_trk_accept_imag[1]->Fill(Q_n1_Psi2_plus.Im()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
+
 
 /*
 event average v1
@@ -515,6 +523,9 @@ event average v1
   c2_ab_real->Fill( Q_n3_1_HFcombined.Re()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
   c2_ab_imag->Fill( Q_n3_1_HFcombined.Im()/Q_0_1_HFcombined.Re(), Q_0_1_HFcombined.Re() );
 
+  c2_Psi_2_real->Fill(Q_n1_Psi2.Re()/Q_0_Psi2.Re(), Q_0_Psi2.Re());
+  c2_Psi_2_imag->Fill(Q_n1_Psi2.Im()/Q_0_Psi2.Re(), Q_0_Psi2.Re());
+
 
 //numerator
   for(int eta = 0; eta < NetaBins; eta++){
@@ -544,6 +555,13 @@ event average v1
 
       c2_trk_accept[eta][charge][0]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
       c2_trk_accept[eta][charge][1]->Fill(Q_n1_1[eta][charge].Im()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
+
+
+      TComplex N_v1_Mixed, D_v1_Mixed;
+      N_v1_Mixed = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2;
+      D_v1_Mixed = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2;
+
+      c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
 
     }
   }
@@ -593,6 +611,8 @@ DirectedFlowCorrelatorTest::beginJob()
 
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
+
+      c2_v1_mixed[eta][charge] = fs->make<TH1D>(Form("c2_v1_mixed_%d_%d",eta,charge),";c1", 1,-1,1);
       for(int dir = 0; dir < 3; dir++){
 
         c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
@@ -616,12 +636,14 @@ DirectedFlowCorrelatorTest::beginJob()
   c2_c_plus_real = fs->make<TH1D>("c2_c_plus_real",";c2_c_plus_real", 1,-1,1);
   c2_c_minus_real = fs->make<TH1D>("c2_c_minus_real",";c2_c_minus_real", 1,-1,1);
   c2_ab_real = fs->make<TH1D>("c2_ab_real",";c2_ab_real", 1,-1,1);
+  c2_Psi_2_real = fs->make<TH1D>("c2_Psi_2_real",";c2_Psi_2_real", 1,-1,1);
 
   c2_a_imag = fs->make<TH1D>("c2_a_imag",";c2_a_imag", 1,-1,1);
   c2_b_imag = fs->make<TH1D>("c2_b_imag",";c2_b_imag", 1,-1,1);
   c2_c_plus_imag = fs->make<TH1D>("c2_c_plus_imag",";c2_c_plus_imag", 1,-1,1);
   c2_c_minus_imag = fs->make<TH1D>("c2_c_minus_imag",";c2_c_minus_imag", 1,-1,1);
   c2_ab_imag = fs->make<TH1D>("c2_ab_imag",";c2_ab_imag", 1,-1,1);
+  c2_Psi_2_imag = fs->make<TH1D>("c2_Psi_2_imag",";c2_Psi_2_imag", 1,-1,1);
 
   for(int eta = 0; eta < NetaBins; eta++){
 
