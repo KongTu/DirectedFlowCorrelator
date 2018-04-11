@@ -205,8 +205,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   TComplex Q_n1n3_2[NetaBins][2], Q_00_2[NetaBins][2];
 
   //Psi_2 in the HF
-   TComplex Q_n1_Psi2_HF, Q_0_Psi2_HF;
-   TComplex Q_n1_Psi2_HFminus, Q_0_Psi2_HFminus, Q_n1_Psi2_HFplus, Q_0_Psi2_HFplus;
+  TComplex Q_n1_Psi2_HF, Q_0_Psi2_HF;
+  TComplex Q_n1_Psi2_HFminus, Q_0_Psi2_HFminus, Q_n1_Psi2_HFplus, Q_0_Psi2_HFplus;
 
   double HF_Psi_1_cosine = 0.0;
   double HF_Psi_1_sine = 0.0;
@@ -600,7 +600,6 @@ event average v1
       c2_trk_accept[eta][charge][0]->Fill(Q_n1_1[eta][charge].Re()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
       c2_trk_accept[eta][charge][1]->Fill(Q_n1_1[eta][charge].Im()/Q_0_1[eta][charge].Re(), Q_0_1[eta][charge].Re());
 
-
       TComplex N_v1_Mixed, D_v1_Mixed;
       
       if( eta == 3 || eta == 4){
@@ -620,10 +619,14 @@ event average v1
       }
 
       //with Psi_2 HF
-      N_v1_Mixed = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HF;
-      D_v1_Mixed = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HF;
+      TComplex N_v1_Mixed_HF, D_v1_Mixed_HF;
 
-      c2_v1_mixed_HF[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
+      N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HF;
+      D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HF;
+
+      cout << "test " << N_v1_Mixed_HF.Re() << " " << D_v1_Mixed_HF.Re() << endl;
+
+      c2_v1_mixed_HF[eta][charge]->Fill(N_v1_Mixed_HF.Re()/D_v1_Mixed_HF.Re(), D_v1_Mixed_HF.Re());
     }
   }
 
