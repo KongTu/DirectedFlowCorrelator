@@ -622,8 +622,6 @@ event average v1
       N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HF;
       D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HF;
 
-      cout << "test " << N_v1_Mixed_HF.Re() << " " << D_v1_Mixed_HF.Re() << endl;
-
       c2_v1_mixed_HF[eta][charge]->Fill(N_v1_Mixed_HF.Re()/D_v1_Mixed_HF.Re(), D_v1_Mixed_HF.Re());
     }
   }
