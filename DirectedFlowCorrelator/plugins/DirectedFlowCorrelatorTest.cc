@@ -204,6 +204,9 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   TComplex Q_n1_1[NetaBins][2], Q_0_1[NetaBins][2];
   TComplex Q_n1n3_2[NetaBins][2], Q_00_2[NetaBins][2];
 
+  //Psi_2 in the HF
+   TComplex Q_n1_Psi2_HF, Q_0_Psi2_HF;
+   TComplex Q_n1_Psi2_HFminus, Q_0_Psi2_HFminus, Q_n1_Psi2_HFplus, Q_0_Psi2_HFplus;
 
   double HF_Psi_1_cosine = 0.0;
   double HF_Psi_1_sine = 0.0;
@@ -243,6 +246,24 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 
           }
           else{continue;}
+
+          if( caloEta < 4.0 && caloEta > 3.0 ){
+
+              Q_n1_Psi2_HF += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HF += q_vector(0, 1, w, caloPhi);
+
+              Q_n1_Psi2_HFplus += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HFplus += q_vector(0, 1, w, caloPhi);
+
+          }
+          else if ( caloEta < -3.0 && caloEta > -4.0 ){
+
+              Q_n1_Psi2_HF += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HF += q_vector(0, 1, w, caloPhi);
+
+              Q_n1_Psi2_HFminus += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HFminus += q_vector(0, 1, w, caloPhi);
+          }
   }
 
   //Psi_1 in HF:
@@ -467,7 +488,7 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
   Psi_1_Psi_2->Fill(term_2, term_2_weight);
 
 /*
-Psi_2 resolution
+Psi_2 resolution Tracker
 */
 
   TComplex N_2_trk, D_2_trk;
@@ -483,6 +504,22 @@ Psi_2 resolution
   Psi_2_trk_accept_imag[1]->Fill(Q_n1_Psi2_plus.Im()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
 
 
+/*
+Psi_2 resolution HF
+*/
+
+  //2-subs
+ 
+  N_2_trk = Q_n1_Psi2_HFplus*TComplex::Conjugate(Q_n1_Psi2_HFminus);
+  D_2_trk = Q_0_Psi2_HFplus*Q_0_Psi2_HFminus;
+
+  Psi_2_HF_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  Psi_2_HF_accept_real[0]->Fill(Q_n1_Psi2_HFminus.Re()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
+  Psi_2_HF_accept_imag[0]->Fill(Q_n1_Psi2_HFminus.Im()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
+
+  Psi_2_HF_accept_real[1]->Fill(Q_n1_Psi2_HFplus.Re()/Q_0_Psi2_HFplus.Re(), Q_0_Psi2_HFplus.Re());
+  Psi_2_HF_accept_imag[1]->Fill(Q_n1_Psi2_HFplus.Im()/Q_0_Psi2_HFplus.Re(), Q_0_Psi2_HFplus.Re());
+ 
 /*
 event average v1
 */
@@ -581,7 +618,12 @@ event average v1
 
         c2_v1_mixed[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
       }
-      
+
+      //with Psi_2 HF
+      N_v1_Mixed = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HF;
+      D_v1_Mixed = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HF;
+
+      c2_v1_mixed_HF[eta][charge]->Fill(N_v1_Mixed.Re()/D_v1_Mixed.Re(), D_v1_Mixed.Re());
     }
   }
 
@@ -632,6 +674,7 @@ DirectedFlowCorrelatorTest::beginJob()
     for(int charge = 0; charge < 2; charge++){
 
       c2_v1_mixed[eta][charge] = fs->make<TH1D>(Form("c2_v1_mixed_%d_%d",eta,charge),";c1", 1,-1,1);
+      c2_v1_mixed_HF[eta][charge] = fs->make<TH1D>(Form("c2_v1_mixed_HF_%d_%d",eta,charge),";c1", 1,-1,1);
       for(int dir = 0; dir < 3; dir++){
 
         c2_v1[eta][charge][dir] = fs->make<TH1D>(Form("c2_v1_%d_%d_%d",eta,charge,dir),";c1", 1,-1,1);
@@ -673,11 +716,14 @@ DirectedFlowCorrelatorTest::beginJob()
 
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
+  Psi_2_HF_reso = fs->make<TH1D>("Psi_2_HF_reso",";Psi_2_HF_reso", 1,-1,1);
 
   for(int charge = 0; charge < 2; charge++){
 
     Psi_2_trk_accept_real[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_real_%d",charge),";Psi_2_trk_accept_real", 1,-1,1);
     Psi_2_trk_accept_imag[charge] = fs->make<TH1D>(Form("Psi_2_trk_accept_imag_%d",charge),";Psi_2_trk_accept_imag", 1,-1,1);
+    Psi_2_HF_accept_real[charge] = fs->make<TH1D>(Form("Psi_2_HF_accept_real_%d",charge),";Psi_2_HF_accept_real", 1,-1,1);
+    Psi_2_HF_accept_imag[charge] = fs->make<TH1D>(Form("Psi_2_HF_accept_imag_%d",charge),";Psi_2_HF_accept_imag", 1,-1,1);
   }
 
   Psi_2_sin = fs->make<TH1D>("Psi_2_sin",";Psi_2_sin", 1,-10000,10000);
