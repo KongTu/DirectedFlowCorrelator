@@ -619,9 +619,17 @@ event average v1
       //with Psi_2 HF
       TComplex N_v1_Mixed_HF, D_v1_Mixed_HF;
 
-      N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HF;
-      D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HF;
+      if( eta < 4 ){
+        
+        N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HFplus;
+        D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HFplus;
+      }
+      else{
 
+        N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HFminus;
+        D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HFminus;
+      }
+      
       c2_v1_mixed_HF[eta][charge]->Fill(N_v1_Mixed_HF.Re()/D_v1_Mixed_HF.Re(), D_v1_Mixed_HF.Re());
     }
   }
