@@ -489,6 +489,8 @@ DirectedFlowCorrelatorTest::analyze(const edm::Event& iEvent, const edm::EventSe
 Psi_2 resolution Tracker
 */
 
+  //2sub
+
   TComplex N_2_trk, D_2_trk;
 
   N_2_trk = Q_n1_Psi2_plus*TComplex::Conjugate(Q_n1_Psi2_minus);
@@ -501,6 +503,14 @@ Psi_2 resolution Tracker
   Psi_2_trk_accept_real[1]->Fill(Q_n1_Psi2_plus.Re()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
   Psi_2_trk_accept_imag[1]->Fill(Q_n1_Psi2_plus.Im()/Q_0_Psi2_plus.Re(), Q_0_Psi2_plus.Re());
 
+  //3sub
+  N_2_trk = Q_n1_Psi2_HFminus*TComplex::Conjugate(Q_n1_Psi2);
+  D_2_trk = Q_0_Psi2_HFminus*Q_0_Psi2;
+  Psi_2_HFminusTRK_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  
+  N_2_trk = Q_n1_Psi2_HFplus*TComplex::Conjugate(Q_n1_Psi2);
+  D_2_trk = Q_0_Psi2_HFplus*Q_0_Psi2;
+  Psi_2_HFplusTRK_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
 
 /*
 Psi_2 resolution HF
@@ -509,7 +519,7 @@ Psi_2 resolution HF
   //2-subs
  
   N_2_trk = Q_n1_Psi2_HFplus*TComplex::Conjugate(Q_n1_Psi2_HFminus);
-  D_2_trk = Q_0_Psi2_HFplus*Q_0_Psi2_HFminus;
+  D_2_trk = Q_n1_Psi2_HFplus*Q_0_Psi2_HFminus;
 
   Psi_2_HF_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
   Psi_2_HF_accept_real[0]->Fill(Q_n1_Psi2_HFminus.Re()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
@@ -619,7 +629,7 @@ event average v1
       //with Psi_2 HF
       TComplex N_v1_Mixed_HF, D_v1_Mixed_HF;
 
-      if( eta < 4 ){
+      if( eta > 4 ){
         
         N_v1_Mixed_HF = Q_n1_1[eta][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HFplus;
         D_v1_Mixed_HF = Q_0_1[eta][charge]*Q_0_1_HFcombined*Q_0_Psi2_HFplus;
@@ -723,6 +733,8 @@ DirectedFlowCorrelatorTest::beginJob()
 
   Psi_1_Psi_2 = fs->make<TH1D>("Psi_1_Psi_2",";Psi_1_Psi_2", 1,-1,1);
   Psi_2_trk_reso = fs->make<TH1D>("Psi_2_trk_reso",";Psi_2_trk_reso", 1,-1,1);
+  Psi_2_HFminusTRK_reso = fs->make<TH1D>("Psi_2_HFminusTRK_reso",";Psi_2_HFminusTRK_reso", 1,-1,1);
+  Psi_2_HFplusTRK_reso = fs->make<TH1D>("Psi_2_HFplusTRK_reso",";Psi_2_HFplusTRK_reso", 1,-1,1);
   Psi_2_HF_reso = fs->make<TH1D>("Psi_2_HF_reso",";Psi_2_HF_reso", 1,-1,1);
 
   for(int charge = 0; charge < 2; charge++){
