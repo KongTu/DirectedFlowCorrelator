@@ -519,7 +519,7 @@ Psi_2 resolution HF
   //2-subs
  
   N_2_trk = Q_n1_Psi2_HFplus*TComplex::Conjugate(Q_n1_Psi2_HFminus);
-  D_2_trk = Q_n1_Psi2_HFplus*Q_0_Psi2_HFminus;
+  D_2_trk = Q_0_Psi2_HFplus*Q_0_Psi2_HFminus;
 
   Psi_2_HF_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
   Psi_2_HF_accept_real[0]->Fill(Q_n1_Psi2_HFminus.Re()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
