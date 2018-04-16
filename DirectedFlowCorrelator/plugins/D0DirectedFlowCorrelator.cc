@@ -230,6 +230,14 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
   TComplex Q_D0obs_n1_1[NyBins][3], Q_D0obs_0_1[NyBins][3], Q_D0bkg_n1_1[NyBins][3], Q_D0bkg_0_1[NyBins][3];
   //D0 mass-fit method, no separation of obs and bkg
   TComplex Q_D0_n1_1[NyBins][30][3], Q_D0_0_1[NyBins][30][3];
+  
+  //Psi_1 HF on both side
+  TComplex Q_n3_1_HFcombined, Q_0_1_HFcombined;
+
+  //Psi_2 in the HF
+  TComplex Q_n1_Psi2_HF, Q_0_Psi2_HF;
+  TComplex Q_n1_Psi2_HFminus, Q_0_Psi2_HFminus, Q_n1_Psi2_HFplus, Q_0_Psi2_HFplus;
+
 
   double HF_Psi_1_cosine = 0.0;
   double HF_Psi_1_sine = 0.0;
@@ -255,8 +263,11 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               HF_Psi_1_sine += w*sin( 1*caloPhi );
               HF_Psi_1_cosine += w*cos( 1*caloPhi );
 
+              Q_n3_1_HFcombined += q_vector(+1, 1, w, caloPhi);
+              Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
+
           }
-          else if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
+          if( caloEta < -etaLowHF_ && caloEta > -etaHighHF_ ){
 
               Q_n3_1_HFminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFminus += q_vector(0, 1, w, caloPhi); //normalization needs to be positive in order to be not cancel out
@@ -264,10 +275,29 @@ D0DirectedFlowCorrelator::analyze(const edm::Event& iEvent, const edm::EventSetu
               Q_n3_1_HFplusANDminus += q_vector(-1, 1, -w, caloPhi);
               Q_0_1_HFplusANDminus += q_vector(0, 1, w, caloPhi);
 
+              Q_n3_1_HFcombined += q_vector(+1, 1, -w, caloPhi);
+              Q_0_1_HFcombined += q_vector(0, 1, w, caloPhi);
+
               HF_Psi_1_sine += -w*sin( 1*caloPhi );
               HF_Psi_1_cosine += -w*cos( 1*caloPhi );
           }
-          else{continue;}
+          if( caloEta < 4.0 && caloEta > 3.0 ){
+
+              Q_n1_Psi2_HF += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HF += q_vector(0, 1, w, caloPhi);
+
+              Q_n1_Psi2_HFplus += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HFplus += q_vector(0, 1, w, caloPhi);
+
+          }
+          if ( caloEta < -3.0 && caloEta > -4.0 ){
+
+              Q_n1_Psi2_HF += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HF += q_vector(0, 1, w, caloPhi);
+
+              Q_n1_Psi2_HFminus += q_vector(-2, 1, w, caloPhi);
+              Q_0_Psi2_HFminus += q_vector(0, 1, w, caloPhi);
+          }
   }
 
   double Psi_1 = TMath::ATan(HF_Psi_1_sine/HF_Psi_1_cosine)/1;
@@ -679,6 +709,18 @@ event average v1
   c2_ab_one_real->Fill( Q_n3_1_HFplusANDminus.Re()/Q_0_1_HFplusANDminus.Re(), Q_0_1_HFplusANDminus.Re() );
   c2_ab_one_imag->Fill( Q_n3_1_HFplusANDminus.Im()/Q_0_1_HFplusANDminus.Re(), Q_0_1_HFplusANDminus.Re() );
 
+//Psi_2 event plane HF reslution
+
+  N_2_trk = Q_n1_Psi2_HFplus*TComplex::Conjugate(Q_n1_Psi2_HFminus);
+  D_2_trk = Q_0_Psi2_HFplus*Q_0_Psi2_HFminus;
+
+  Psi_2_HF_reso->Fill(N_2_trk.Re()/D_2_trk.Re(), D_2_trk.Re());
+  Psi_2_HF_accept_real[0]->Fill(Q_n1_Psi2_HFminus.Re()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
+  Psi_2_HF_accept_imag[0]->Fill(Q_n1_Psi2_HFminus.Im()/Q_0_Psi2_HFminus.Re(), Q_0_Psi2_HFminus.Re());
+
+  Psi_2_HF_accept_real[1]->Fill(Q_n1_Psi2_HFplus.Re()/Q_0_Psi2_HFplus.Re(), Q_0_Psi2_HFplus.Re());
+  Psi_2_HF_accept_imag[1]->Fill(Q_n1_Psi2_HFplus.Im()/Q_0_Psi2_HFplus.Re(), Q_0_Psi2_HFplus.Re());
+ 
 //numerator charged particle
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
@@ -769,7 +811,7 @@ event average v1
     }
   }
 
-  //numerator D0 mass-fit method
+//numerator D0 mass-fit method
   for(int rap = 0; rap < NyBins; rap++){
     for(int imass = 0; imass < NmassBins; imass++){
       for(int charge = 0; charge < 3; charge++){
@@ -786,9 +828,10 @@ event average v1
 
         double V1_B = N_v1_B_SP.Re()/D_v1_B_SP.Re();
        
-        //use one plane
-        N_v1_AB_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFplusANDminus;
-        D_v1_AB_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFplusANDminus;
+        //use mixedharmonics
+
+        N_v1_AB_SP = Q_D0_n1_1[rap][imass][charge]*Q_n3_1_HFcombined*Q_n1_Psi2_HFplus;
+        D_v1_AB_SP = Q_D0_0_1[rap][imass][charge]*Q_0_1_HFcombined*Q_0_Psi2_HFplus;
 
         double V1_AB = N_v1_AB_SP.Re()/D_v1_AB_SP.Re();
 
@@ -894,6 +937,14 @@ D0DirectedFlowCorrelator::beginJob()
   trkPt = fs->make<TH1D>("trkPt", ";p_{T}(GeV)", Nptbins,ptBinsArray);
   trk_eta = fs->make<TH1D>("trk_eta", ";#eta", 50,-2.5,2.5);
 
+  Psi_2_HF_reso = fs->make<TH1D>("Psi_2_HF_reso",";Psi_2_HF_reso", 1,-1,1);
+
+  for(int charge = 0; charge < 2; charge++){
+
+    Psi_2_HF_accept_real[charge] = fs->make<TH1D>(Form("Psi_2_HF_accept_real_%d",charge),";Psi_2_HF_accept_real", 1,-1,1);
+    Psi_2_HF_accept_imag[charge] = fs->make<TH1D>(Form("Psi_2_HF_accept_imag_%d",charge),";Psi_2_HF_accept_imag", 1,-1,1);
+  
+  }
   for(int eta = 0; eta < NetaBins; eta++){
     for(int charge = 0; charge < 2; charge++){
       for(int dir = 0; dir < 3; dir++){
