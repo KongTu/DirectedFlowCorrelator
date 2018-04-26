@@ -11,4 +11,4 @@ The latest development of the code is in Branch "CodeWithOnlyOneAngle"
 - macros/massfitvn_combine.C
 - macros/massfitvn_combine_3fit.C
 
-These two can simultaneously fit mass and Vn distribution, and extract the signal Vn. The input files are generated from macros/D0_v1VSmass_odd.C (or with the \textit{mixed} extension). 
+These two can simultaneously fit mass and Vn distribution, and extract the signal Vn. The input files are generated from macros/D0_v1VSmass_odd.C (or with the mixed extension). 
